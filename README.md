@@ -1,14 +1,36 @@
+## Owner and Contributors
+This project was intially created by Creative Tim  (https://www.creative-tim.com/), They worked on the Angular Template.
+This project was forked by Ilyes Chaabane, where more views added to the template and a backend side created to render the project Full Stack.
+
+## Tech Stack
+This project follows the MEAN Stack (MongoDB,ExpressJS,AngularJS,NodeJS)
 
 ## Terminal Commands
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.0.0 and angular 4.x.
 
-1. Install NodeJs from [NodeJs Official Page](https://nodejs.org/en).
-2. Open Terminal
-3. Go to your file project
-4. Make sure you have installed [Angular CLI](https://github.com/angular/angular-cli) already. If not, please install.
-5. Run in terminal: ```npm install```
-6. Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+In order to get the backend Server running 
+1. Set up a mongodb database called "bootcamp_management" so that the server connects to it once it starts
+2. Install NodeJs from [NodeJs Official Page](https://nodejs.org/en). 
+3. Run in terminal: ```npm install```
+4. Run in the Terminal `npm run dev`
+
+There is a python ML model that will be used in this project so you might wanna configure the env
+1. Run `python3 -m venv /path/to/new/virtual/environment`
+2. Create a file called requirements.txt
+3. Add to the file
+numpy
+pandas
+tensorflow
+scikit-learn
+matplotlib
+requests
+4. Run `pip install -r requirements.txt`
+5. Finally in your terminal run python3 model.py
+
+Now Run Angular from Angular CLI
+1. Make sure you have installed [Angular CLI](https://github.com/angular/angular-cli) already. If not, please install.
+2. Run `ng serve` or `npm start` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
 
