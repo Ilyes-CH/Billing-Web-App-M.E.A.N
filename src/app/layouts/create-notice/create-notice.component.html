@@ -1,0 +1,88 @@
+<div style="margin-top: 70px;" class="container  vh-150 d-flex flex-column justify-content-center align-items-center">
+    <p class="text-white text-center mb-5 fw-bold fs-4">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa, velit. Vel, harum doloribus. Quis expedita
+        perspiciatis incidunt error culpa suscipit? Quo itaque eum vitae velit unde laboriosam labore voluptatibus
+        reiciendis.
+    </p>
+
+    <form #noticeForm="ngForm" (ngSubmit)="sendNoticeInfo()" class="w-50 p-4 bg-light rounded shadow">
+        <!-- Student Info -->
+        <fieldset class="mb-4">
+            <legend class="fs-5 fw-semibold mb-3">Student Information</legend>
+            <div class="mb-3">
+                <label for="fullName" class="form-label">Full Name</label>
+                <input type="text" id="fullName" name="fullName" class="form-control"
+                    value="{{noticeInfo?.from?.firstName}} {{noticeInfo?.from?.lastName}}" disabled />
+            </div>
+            <div class="mb-3">
+                <label for="phoneNumber" class="form-label">Phone Number</label>
+                <input type="text" id="phoneNumber" name="phoneNumber" class="form-control"
+                    value="{{noticeInfo?.from?.phone}}" disabled pattern="^\d{10}$" />
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" id="email" name="email" class="form-control" value="{{noticeInfo?.from?.email}}"
+                    disabled="" />
+            </div>
+        </fieldset>
+
+        <!-- Services -->
+        <fieldset class="mb-4">
+            <legend class="fs-5 fw-semibold mb-3">Services</legend>
+            <div *ngFor="let service of servicesArray; let i = index" class="border rounded p-3 mb-3">
+                <div class="mb-3">
+                    <label for="serviceName{{ i }}" class="form-label">Service Name</label>
+                    <input type="text" id="serviceName{{ i }}" class="form-control" [(ngModel)]="service.name"
+                        name="serviceName{{ i }}" disabled />
+                </div>
+                <div class="mb-3">
+                    <label for="price{{ i }}" class="form-label">Price in Dt</label>
+                    <input type="number" id="price{{ i }}" class="form-control" [value]="service.priceHT"
+                        name="price{{ i }}" disabled />
+                </div>
+                <div class="mb-3">
+                    <label for="quantity{{ i }}" class="form-label">Quantity</label>
+                    <input type="number" id="quantity{{ i }}" class="form-control" [value]="service.quantity"
+                        name="quantity{{ i }}" disabled />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Tax Rate (%)</label>
+                    <input type="number"required id="taxRate" class="form-control" [(ngModel)]="noticeInfo.taxRate"  />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Tax Amount</label>
+                    <input type="text" class="form-control" [value]="service.taxAmount" disabled/>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Price After Tax</label>
+                    <input type="text" required class="form-control" name="priceAfterTax{{ i }}" [value]="service.priceAfterTax" disabled />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Total Price After Tax</label>
+                    <input type="text" required class="form-control" name="totalPriceAfterTax{{ i }}" [value]="service.quantifiedPrice" disabled />
+                </div>
+            </div>
+        </fieldset>
+
+        <!-- Totals -->
+        <fieldset class="mb-4">
+            <legend class="fs-5 fw-semibold mb-3">Totals</legend>
+            <div class="mb-3">
+                <label class="form-label">Subtotal</label>
+                <input type="text" required class="form-control" [value]="noticeInfo.subTotal | number:'1.2-2'" />
+            </div>
+            <div class="mb-3">
+                <label for="" class="form-label">Tax Amount</label>
+                <input type="text" required class="form-control" [value]="noticeInfo.totalTaxAmount">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Total with Tax</label>
+                <input type="text" required class="form-control" [value]="noticeInfo.totalWithTax | number:'1.2-2'" />
+            </div>
+        </fieldset>
+        <button type="submit" class="btn btn-primary w-100" [disabled]="!noticeForm.valid">
+            Submit Notice
+        </button>
+    </form>
+    <button type="button" class="btn btn-outline-success w-50" (click)="applyChanges()">Apply Tax</button>
+</div>

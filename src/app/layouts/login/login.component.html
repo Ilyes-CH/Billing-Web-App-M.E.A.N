@@ -1,0 +1,54 @@
+<div class="page-wrapper" style="background-image: url(../../../assets/img/31.jpg);" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
+  <div class="position-relative overflow-hidden text-bg-light min-vh-100 d-flex align-items-center justify-content-center">
+    <div class="d-flex align-items-center justify-content-center w-100">
+      <div class="row justify-content-center w-100">
+        <div class="col-md-8 col-lg-6 col-xxl-3 ">
+          <div class="card mb-0 border-0 shadow-sm bg-dark" style="border-radius: 10px;">
+            <div class="card-body text-center">
+              <a routerLink="" class="text-nowrap logo-img py-3 w-100 d-block">
+                <h3 class=" font-weight-bold">Bootcamp</h3>
+              </a>
+              <form [formGroup]="loginForm" (ngSubmit)="login()">
+                <!-- Username -->
+                <div class="mb-3 text-start">
+                  <label for="email" class="form-label fw-semibold">Username</label>
+                  <input type="email" class="form-control text-white" formControlName="email" id="email" aria-describedby="emailHelp" style="border-radius: 5px;">
+                  <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="text-danger">
+                    Username is required.
+                  </div>
+                </div>
+
+                <!-- Password -->
+                <div class="mb-4 text-start">
+                  <label for="password" class="form-label fw-semibold">Password</label>
+                  <input type="password" class="form-control text-white" formControlName="password" id="password" style="border-radius: 5px;">
+                  <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="text-danger">
+                    Password is required.
+                  </div>
+                </div>
+
+                <!-- Remember me and Forgot Password -->
+                <div class="d-flex align-items-center justify-content-between mb-4">
+                  <div class="form-check">
+                    <input class="form-check-input text-white" type="checkbox" value="" id="flexCheckChecked" checked>
+                  </div>
+                  <a class="fw-bold major-color" routerLink="/reset-password" style="text-decoration: none;">Forgot Password?</a>
+                </div>
+
+                <!-- Sign In Button -->
+                <button class="btn fw-bold w-25 py-2 fs-5 rounded bg-major-color" style="border-radius: 5px;color:white;" [disabled]="loginForm.invalid">Sign In</button>
+
+                <!-- Create Account -->
+                <div class="d-flex align-items-center justify-content-center mt-3">
+                  <p class="text-muted mb-0">New to MaterialM?</p>
+                  <a class="fw-bold ms-2 major-color" routerLink="/verify-email" style="text-decoration: none;">Create an account</a>
+                </div>
+              </form>
+              <p *ngIf="error !== null" class="text-danger">{{error}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

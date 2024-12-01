@@ -1,0 +1,22 @@
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-4 " *ngFor="let testimonial of testimonials">
+            <div class="card bg-dark border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <blockquote class="blockquote">
+                        <i class="fa-solid fa-quote-left"></i>
+                        <p class=" text-white" style="font-family: monospace;">{{testimonial.comments}}</p>
+                        <i class="mb-4 fa-solid fa-quote-right"></i>
+                    </blockquote>
+                    <img [src]="testimonial.commentorId.avatar" alt="User Image" class="rounded-circle mb-3" width="80" height="80">
+                    <h5 class="card-title text-white" >{{testimonial.commentorId.firstName}} {{testimonial.commentorId.lastName}}</h5>
+                    <div>
+                        <a class="text-primary mx-2"><i class="fab fa-facebook"></i></a>
+                        <a class="text-info mx-2"><i class="fab fa-twitter"></i></a>
+                        <a class="text-primary mx-2"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

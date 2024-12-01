@@ -1,0 +1,53 @@
+<div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+    data-sidebar-position="fixed" data-header-position="fixed">
+    <div
+        class="position-relative overflow-hidden text-bg-light min-vh-100 d-flex align-items-center justify-content-center">
+        <div class="d-flex align-items-center justify-content-center w-100">
+            <div class="row justify-content-center w-100">
+                <div class="col-md-8 col-lg-6 col-xxl-4">
+                    <div class="card mb-0 border-0 shadow-lg bg-dark text-white" style="border-radius: 12px;">
+                        <div class="card-body text-center py-5">
+                            <a class="text-nowrap logo-img py-3 w-100 d-block">
+                                <h2 class="mb-4 font-weight-bold">Email Verification</h2>
+                            </a>
+                            <p class="mb-4 fs-5">{{ statement | titlecase }}</p>
+                            <p class="text-muted fs-6">Thank you for understanding</p>
+                            <form [formGroup]="emailVerificationForm">
+                                <div class="mb-4">
+                                    <!-- Email Input -->
+                                    <input type="text" formControlName="email"
+                                        class="form-control text-white fs-5 p-3 bg-secondary"
+                                        id="inputEmail" placeholder="email@example.com"
+                                        style="border-radius: 8px; border: none;">
+                                    <!-- Validation Errors -->
+                                    <div
+                                        *ngIf="emailVerificationForm.controls['email'].invalid && (emailVerificationForm.touched || emailVerificationForm.controls['email'].dirty)"
+                                        class="mt-2 text-start text-danger fs-6">
+                                        <div *ngIf="emailVerificationForm.controls['email'].errors?.['required']">
+                                            Email field is required.
+                                        </div>
+                                        <div *ngIf="emailVerificationForm.controls['email'].errors?.['email']">
+                                            Email format is incorrect.
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Feedback Message -->
+                                <div *ngIf="isSent !== null" class="mt-3">
+                                    <p *ngIf="isSent" class="text-success fs-6">Please check your inbox.</p>
+                                    <p *ngIf="!isSent" class="text-danger fs-6">Invalid email or already used.</p>
+                                    <a *ngIf="isSent" class="text-primary fs-6" routerLink="/signup">SignUp</a>
+                                </div>
+                                <!-- Submit Button -->
+                                <div class="d-grid">
+                                    <button [disabled]="emailVerificationForm.invalid" type="submit"
+                                        class="btn btn-primary fs-5 px-4 py-2" (click)="sendEmail()"
+                                        style="border-radius: 8px;">Confirm Identity</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

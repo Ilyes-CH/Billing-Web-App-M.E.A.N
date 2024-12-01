@@ -1,0 +1,160 @@
+<div class="page-wrapper" id="main-wrapper" style="background-image: url(../../../assets/img/31.jpg);"
+  data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed"
+  data-header-position="fixed">
+  <div
+    class="position-relative overflow-hidden text-bg-light min-vh-100 d-flex align-items-center justify-content-center">
+    <div class="d-flex align-items-center justify-content-center w-100">
+      <div class="row justify-content-center w-100">
+        <div class="col-md-8 col-lg-6 col-xxl-3">
+          <div class="card mb-0 border-0 shadow-sm bg-dark" style="border-radius: 10px;">
+            <div class="card-body text-center">
+              <a routerLink="" class="text-nowrap logo-img py-3 w-100 d-block">
+                <h2 class="ubuntu-bold" style="font-weight: bolder;">{{role == 'Accountant' ? 'Welcome To Our
+                  Staff':'Welcome To Our Club'}}</h2>
+              </a>
+              <p class="text-muted">Please Fill The Fields Below To Sign Up</p>
+              <div *ngIf="role == 'Learner'" class="mb-3 text-start">
+
+                <div class="form-group">
+                  <input type="file" class="form-control" name="" style="display: none;" #filePicker
+                    (change)="getImage($event)">
+                </div>
+                <div class="text-center">
+                  <button class="btn btn-outline-success" (click)="filePicker.click()">Choose Your Avatar</button>
+                  <div class="text-danger mt-2" *ngIf="fileError">
+                    {{ fileError }}
+                  </div>
+                </div>
+              </div>
+              <form #signupForm="ngForm" (ngSubmit)="signup()">
+                <div class="mb-3 text-start">
+                  <label for="firstName" class="form-label fw-semibold">First name</label>
+                  <input type="text" class="form-control text-white" #firstName="ngModel" name="firstName"
+                    [(ngModel)]="user.firstName" name="firstName" id="firstName" aria-describedby="textHelp"
+                    style="border-radius: 5px;" required>
+                  <div *ngIf="firstName.touched && !user.firstName">First Name Is Required</div>
+                  <div *ngIf="firstName.touched && isShort(user.firstName)">First Name At Least 4 Characters</div>
+                  <div *ngIf="firstName.touched && !isAlpha(user.firstName)">First Name Must Be Only Alphabetic
+                    Characters</div>
+                </div>
+
+                <div class="mb-3 text-start">
+                  <label for="lastName" class="form-label fw-semibold">Last name</label>
+                  <input type="text" class="form-control text-white" name="lastName" #lastName="ngModel"
+                    [(ngModel)]="user.lastName" name="lastName" id="lastName" aria-describedby="textHelp"
+                    style="border-radius: 5px;" required>
+                  <div *ngIf="lastName.touched && !user.lastName">Last Name is Required</div>
+                  <div *ngIf="lastName.touched && isShort(user.lastName)">Last Name must be at least 4 characters
+                  </div>
+                  <div *ngIf="lastName.touched && !isAlpha(user.lastName)">Last Name Must Be Only Alphabetic Characters
+                  </div>
+                </div>
+                <div class="mb-3 text-start">
+                  <label for="email" class="form-label fw-semibold">Email Address</label>
+                  <input type="email" class="form-control text-white" #email="ngModel" name="email"
+                    [(ngModel)]="user.email" id="email" aria-describedby="emailHelp" style="border-radius: 5px;"
+                    required>
+                  <div *ngIf="email.touched && !user.email">Email is Required</div>
+                  <div *ngIf="email.touched && !isValidEmail(user.email)">Invalid Email Format</div>
+                </div>
+
+                <div class="mb-3 text-start row">
+                  <div class="col-md-4">
+                    <label for="country" class="form-label fw-semibold">Country</label>
+                    <input type="text" class="form-control text-white" #country="ngModel" name="country"
+                      [(ngModel)]="user.country" id="country" aria-describedby="countryHelp" style="border-radius: 5px;"
+                      required>
+                    <div *ngIf="country.touched && isEmpty(user.country)">Country is Required</div>
+                  </div>
+                  <div class="col-md-4">
+                    <label for="city" class="form-label fw-semibold">City</label>
+                    <input type="text" class="form-control text-white" #city="ngModel" name="city"
+                      [(ngModel)]="user.city" id="city" aria-describedby="cityHelp" style="border-radius: 5px;"
+                      required>
+                    <div *ngIf="city.touched && isEmpty(user.city)">City is Required</div>
+                    <div *ngIf="city.touched && !isAlpha(user.city)">City Must Be Only Alphabetic Characters</div>
+                  </div>
+                  <div class="col-md-4">
+                    <label for="zip" class="form-label fw-semibold">Zip</label>
+                    <input type="text" class="form-control text-white" #zip="ngModel" name="zip" [(ngModel)]="user.zip"
+                      id="zip" aria-describedby="zipHelp" style="border-radius: 5px;" required>
+                    <div *ngIf="zip.touched && isEmpty(user.zip)">ZIP Code is Invalid</div>
+                  </div>
+
+                </div>
+                <div class="mb-3 text-start">
+                  <label for="phone" class="form-label fw-semibold">Phone Number</label>
+                  <input type="tel" class="form-control text-white" #phone="ngModel" [(ngModel)]="user.phone"
+                    name="phone" id="phone" style="border-radius: 5px;" required>
+                  <div *ngIf="phone.touched && isEmpty(user.phone)">Phone is Required</div>
+                  <div *ngIf="phone.touched && !isNumeric(user.phone)">Phone Must be Only Numeric Values</div>
+              <div *ngIf="phone.touched && !isShortNumber(user.phone)">Phone Must be between 8 and 10 digits</div>
+
+                </div>
+
+                <div class="mb-4 text-start">
+                  <label for="password" class="form-label fw-semibold">Password</label>
+                  <input [type]="showPassword ? 'text' : 'password'" class="form-control text-white" #password="ngModel"
+                    name="password" [(ngModel)]="user.password" id="password" aria-describedby="passwordHelp"
+                    style="border-radius: 5px;" required>
+                  <div *ngIf="password.touched && isEmpty(user.password)">Password is Required</div>
+                  <div *ngIf="password.touched && !isShortNumber(user.password)">Password must be at least 8 characters
+                  </div>
+                </div>
+
+                <div class="mb-4 text-start">
+                  <label for="confirmPassword" class="form-label fw-semibold">Confirm Password</label>
+
+                  <input [type]="showPassword ? 'text' : 'password'" class="form-control text-white"
+                    #confirmPassword="ngModel" name="confirmPassword" [(ngModel)]="user.confirmPassword"
+                    id="confirmPassword" aria-describedby="confirmPasswordHelp" style="border-radius: 5px;" required>
+                  <div *ngIf="confirmPassword.touched && isEmpty(user.confirmPassword)">Confirmation Password is
+                    Required
+                  </div>
+                  <div *ngIf="confirmPassword.touched && user.password != user.confirmPassword">Passwords do not match
+                  </div>
+                  <i *ngIf="showPassword" (click)="togglePasswordVisibility()"
+                    class="fa-solid fa-eye  text-success"></i>
+                  <i *ngIf="!showPassword" (click)="togglePasswordVisibility()" class="fa-solid fa-eye-slash"></i>
+
+                </div>
+                <div *ngIf="!adminExists">
+
+                  <div *ngIf="role == 'Accountant'" class="mb-3 text-start">
+                    <label for="workId" class="form-label fw-semibold">Work ID</label>
+                    <input type="tel" class="form-control text-white" name="workId" #workId="ngModel"
+                      [(ngModel)]="user.workId" name="workId" id="workId" style="border-radius: 5px;" required>
+                    <div *ngIf="workId.touched && !isWorkIdValid()">Work Id Is Required</div>
+                  </div>
+                </div>
+
+                <div *ngIf="adminExists" class="mb-4 text-start">
+                  <label for="adminKey" class="form-label fw-semibold">Admin Key</label>
+
+                  <input type="text" [(ngModel)]="user.adminKey" name="adminKey" class="form-control text-white"
+                    id="adminKey" required>
+
+
+                </div>
+                <div class="mb-4 text-start">
+                  <label for="otp" class="form-label fw-semibold">One Time Code</label>
+                  <input type="text" class="form-control text-white" #otp="ngModel" name="otp" [(ngModel)]="user.otp"
+                    id="otp" aria-describedby="otpHelp" style="border-radius: 5px;" required>
+                  <div *ngIf="otp.touched && isEmpty(user.otp)">OTP is Required</div>
+                </div>
+
+                <button [disabled]="!signupForm.form.valid" type="submit"
+                  class="btn major-color fw-bold w-25 py-2 fs-5 rounded bg-major-color"
+                  style="border-radius: 5px;color:white;">Sign up</button>
+                <div class="d-flex align-items-center justify-content-center mt-3">
+                  <p class="text-muted mb-0">Already have an Account?</p>
+                  <a class=" fw-bold ms-2 major-color" routerLink="login" style="text-decoration: none;">Sign In</a>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

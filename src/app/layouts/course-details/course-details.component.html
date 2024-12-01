@@ -1,0 +1,47 @@
+<div class="container-style vh-100 mb-5">
+
+    <div class="m-2">
+        <div *ngIf="error !== null && error " style="margin-top: 20rem;">
+            <div class="d-flex justify-content-center">
+                <div class="spinner-border" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+        </div>
+        <div class=" container-style row">
+            <div *ngIf="error == null || !error" class="mr-5 ml-5 box-style card card-chart bg-dark"
+                style="width: 25rem;margin-top:20rem">
+                <img src={{course.image}} height="250px" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">{{course.name}}</h5>
+                    <p class="card-text">
+                        this course lasts for {{course.details.duration}}
+                        it is divided into {{course.details.parts}} parts
+
+                    </p>
+                    <div class="text-center">
+                        <button class="btn btn-outline-success mr-1" (click)="addToCart(course._id)"><i
+                                class="material-icons">shopping_cart</i> Add</button>
+                        <button class="btn btn-outline-success mr-1" (click)="getPricing(course)">Get Pricing</button>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <span class="vertical-line"></span>
+
+            </div>
+            <div class="row ml-3 text-white margin-top-sm " >
+                <div class="col ml-3" *ngFor="let course of course.details.courses;let i = index">
+
+                    <h3 class="ubuntu-bold  text-nowrap">Part {{i+1}}: {{course.courseName}}</h3>
+                    <div class="row ml-3">
+                        <h3 class="ubuntu-bold">Modules:
+
+                            <h4 class="ubuntu-light" *ngFor="let module of course.modules">- {{module}}</h4>
+                        </h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

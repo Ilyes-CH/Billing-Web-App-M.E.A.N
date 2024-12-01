@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confirm Your Account</title>
+  <style>
+    /* General styles */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f7f7f7;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+    .header {
+      background-color: #007bff;
+      color: #ffffff;
+      padding: 20px;
+      text-align: center;
+    }
+    .content {
+      padding: 20px;
+      text-align: center;
+    }
+    .button {
+      display: inline-block;
+      padding: 12px 24px;
+      background-color: #28a745;
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 5px;
+      font-size: 16px;
+      margin: 20px 0;
+    }
+    .footer {
+      background-color: #f1f1f1;
+      color: #777;
+      font-size: 14px;
+      padding: 15px 20px;
+      text-align: center;
+    }
+    .footer a {
+      color: #007bff;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Header Section -->
+  <div class="header">
+    <h1>Welcome to BootcampCorp!</h1>
+  </div>
+
+  <!-- Content Section -->
+  <div class="content">
+    <h3>Hello!!</h3>
+    <p>Thank you for your interest in our platform. Please use the one time code to verify your email address.</p>
+    <a href="http://localhost:4200/signup" class="button">Confirm Account</a>
+    <br>
+    
+    <h3 id="otp">{{data.otp}}</h3>
+    <h3 id="workId">{{data.workId}}</h3>
+    <br>
+    <p>If you didn’t create an account, please disregard this email.</p>
+  </div>
+
+  <!-- Footer Section -->
+  <div class="footer">
+    <p>If you have any questions, feel free to <a href="mailto:support@yourbrand.com">contact our support team</a>.</p>
+    <p>&copy; {{date}} BootcampCorp. All rights reserved.</p>
+  </div>
+</div>
+
+</body>
+</html>

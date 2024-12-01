@@ -1,0 +1,153 @@
+<div class="main-content">
+
+  <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <div class="carousel-image-wrapper">
+          <div class="carousel-background">
+            <img src="../../assets/img/learntocode.jpg" style="filter: brightness(50%);" class="d-block w-100" [ngStyle]="{height: isMobileMenu() ? '400px' : '700px'}" alt="...">
+          </div>
+        </div>
+        <div class="carousel-text-container">
+          <div class="carousel-text">
+            <h3>Learn to Code</h3>
+            <p>Master your skills with our comprehensive coding courses designed for all levels, from beginners to experts.</p>
+            <p>Unlock the doors to a successful career in tech. Whether you're starting from scratch or enhancing your expertise, our courses provide everything you need to excel.</p>
+          </div>
+        </div>
+      </div>
+  
+      <div class="carousel-item">
+        <div class="carousel-image-wrapper">
+          <div class="carousel-background">
+            <img src="../../assets/img/bootcamp.jpg" style="filter: brightness(50%);" class="d-block w-100" [ngStyle]="{height: isMobileMenu() ? '400px' : '700px'}" alt="...">
+          </div>
+        </div>
+        <div class="carousel-text-container">
+          <div class="carousel-text">
+            <h3>Bootcamp</h3>
+            <p>Accelerate your career with our intensive bootcamp that immerses you in real-world coding challenges.</p>
+            <p>Join a community of passionate learners, gain hands-on experience, and get ready to take on the tech world with a competitive edge!</p>
+          </div>
+        </div>
+      </div>
+  
+      <div class="carousel-item">
+        <div class="carousel-image-wrapper">
+          <div class="carousel-background">
+            <img src="../../assets/img/devbootcamp.jpg" style="filter: brightness(50%);" class="d-block w-100" [ngStyle]="{height: isMobileMenu() ? '400px' : '700px'}" alt="...">
+          </div>
+        </div>
+        <div class="carousel-text-container">
+          <div class="carousel-text">
+            <h3>Developer Bootcamp</h3>
+            <p>Build your future as a software developer in just a few months. From HTML to advanced JavaScript, we cover it all.</p>
+            <p>Our bootcamp is designed to give you the skills needed to land your first job as a developer, with practical, project-based learning that builds a portfolio employers love.</p>
+          </div>
+        </div>
+      </div>
+  
+      <div class="carousel-item">
+        <div class="carousel-image-wrapper">
+          <div class="carousel-background">
+            <img src="../../assets/img/keyboard.jpeg" style="filter: brightness(50%);" class="d-block w-100" [ngStyle]="{height: isMobileMenu() ? '400px' : '700px'}" alt="...">
+          </div>
+        </div>
+        <div class="carousel-text-container">
+          <div class="carousel-text">
+            <h3>Tech Skills</h3>
+            <p>Sharpen your coding abilities and stay ahead in a constantly evolving tech landscape. Master the tools and languages that matter most.</p>
+            <p>Whether you’re interested in front-end development, back-end programming, or full-stack development, we have the resources to help you grow and succeed in the tech industry.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-target="#carouselExampleControls" data-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="sr-only">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-target="#carouselExampleControls" data-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="sr-only">Next</span>
+    </button>
+  </div>
+  
+  
+  
+  
+  
+
+
+  <section class=" bg-minor-color section mt-5 mb-5" style="background-attachment: fixed;
+         background-size: cover;
+          background-position: center;
+          opacity: 0.9;
+          background-image: url(./assets/img/home-cover.jpg)">
+    <h1 class="mt-3 text-center second-minor-color ubuntu-bold" style="letter-spacing:2px;z-index: 10;text-shadow: 2px 2px grey;">Welcome To Our
+      <strong class="ubuntu-bold text-white"> Bootcamp</strong>
+    </h1>
+
+    <h4 class="text-center text-white ubuntu-bold-italic" style="letter-spacing:2px;font-size: 30px;text-shadow: 2px 2px grey;">Learn To Code, Conquor The World</h4>
+    <h4 class="text-center minor-color ubuntu-bold-italic">"Never Too Late To Learn Coding"</h4>
+    <div class="text-center mt-3 mb-5">
+      <a routerLink="about" class=" btn btn-outline-success" type="submit">About Us</a>
+    </div>
+  </section>
+
+  <section id="services" class="section m-5">
+    <div class="container-style text-center">
+      <div class="row ">
+
+        <div *ngIf="noCourses != null && noCourses">
+          <div class="spinner-border" style="margin-left: 50px;" role="status">
+            <span class="sr-only">Loading...</span>
+          </div>
+          <div class="spinner-border" role="status" style="margin-left: 600px;">
+            <span class="sr-only">Loading...</span>
+          </div>
+          <div class="spinner-border" role="status" style="margin-left: 800px;">
+            <span class="sr-only">Loading...</span>
+          </div>
+        </div>
+
+        <div [ngClass]="{'hide' : noCourses}" class="p-5" *ngFor="let course of courses">
+          <app-course [course]="course"></app-course>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="text-center">
+      <a class="btn btn-outline-success" routerLink="courses">View More</a>
+    </div>
+  </section>
+
+  <section id="info" class="section m-5">
+    <div class="card text-center box-style " style="background-color: rgb(88, 58, 92);">
+      <div class="card-header ubuntu-bold" >
+        <h2 class=" ubuntu-bold-italic text-white" style="letter-spacing:2px">
+          Our Partners
+        </h2>
+      </div>
+      <div class="card-body">
+        <img class="m-3" style="opacity: 9;"  src="../../../assets/img/netflix.png" width="100" alt="">
+        <img class="m-3" src="../../../assets/img/microsoft.png" width="100" alt="">
+        <img class="m-3" src="../../../assets/img/google.png" width="150" alt="">
+        <img class="m-3" src="../../../assets/img/social.png" width="100" alt="">
+        <img class="m-3" src="../../../assets/img/tesla.png" width="100" alt="">
+      </div>
+      <div class="card-footer text-muted">
+        2 days ago
+      </div>
+    </div>
+    <div class="text-center">
+      <a href="#" class="btn btn-outline-success">Go somewhere</a>
+    </div>
+  </section>
+
+  <section id="testimonials" class="section m-5">
+    <app-home-feedback class="box-style"></app-home-feedback>
+  </section>
+
+
+</div>

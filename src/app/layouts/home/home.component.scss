@@ -1,0 +1,81 @@
+.box-style{
+    opacity: 0.8;
+    transition: transform 0.3s ease;
+    &:hover{
+        opacity: 1;
+        transform: translateY(-10px);
+    }
+  }
+
+.hide{
+    display: none;
+}
+.ubuntu-bold{
+  font-family: "Ubuntu", sans-serif;
+  font-weight: 700;
+}
+.ubuntu-bold-italic {
+    font-family: "Ubuntu", sans-serif;
+    font-weight: 700;
+    font-style: italic;
+  }
+  
+  .carousel-image-wrapper {
+    position: relative;
+  }
+  
+  /* Style for text container that slides separately */
+  .carousel-text-container {
+    background: rgba(0, 0, 0, 0.6); /* Semi-transparent background for readability */
+    padding: 40px;
+    margin-top: -30px; /* Optional: Adjust positioning relative to the image */
+    border-radius: 15px 15px 0 0; /* Rounded corners for the top of the text container */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Shadow for better contrast */
+  }
+  
+  .carousel-text {
+    color: white;
+    font-family: 'Ubuntu', sans-serif;
+    text-align: left;
+    z-index: 10;
+    max-width: 80%;
+    margin: 0 auto; /* Center the text */
+  }
+  
+  .carousel-text h3 {
+    font-size: 38px;
+    margin-bottom: 15px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+  }
+  
+  .carousel-text p {
+    font-size: 20px;
+    line-height: 1.5;
+    font-weight: 400;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
+  }
+  
+  .carousel-text-container h3,
+  .carousel-text-container p {
+    letter-spacing: 0.5px;
+  }
+  
+  /* Adjust responsiveness */
+  @media (max-width: 768px) {
+    .carousel-text-container {
+      padding: 20px;
+      margin-top: -20px;
+    }
+  
+    .carousel-text h3 {
+      font-size: 28px;
+    }
+  
+    .carousel-text p {
+      font-size: 16px;
+    }
+  }
+  

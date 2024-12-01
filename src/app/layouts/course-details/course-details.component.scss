@@ -1,0 +1,23 @@
+.vertical-line {
+    display: inline-block; /* Keeps it inline with other elements */
+    width: 3px; /* Adjust the thickness */
+    height: 52%;
+    margin-top: 20rem; /* Set the height of the line */
+    background-color: rgb(255, 255, 255); /* Change to your desired color */
+    vertical-align: middle; /* Align it properly with adjacent text or elements */
+  
+    // Hide when screen width is 800px or less
+    @media screen and (max-width: 962px) {
+      display: none;
+    }
+  }
+  
+  // Class for smaller screens to adjust margin-top
+  .margin-top-sm {
+    margin-top: 0rem;
+  
+    @media screen and (min-width: 962px) {
+      margin-top: 22rem;
+    }
+  }
+  

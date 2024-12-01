@@ -1,0 +1,501 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="card card-stats">
+                    <div class="card-header card-header-warning card-header-icon">
+                        <div class="card-icon">
+                            <i class="material-icons">content_copy</i>
+                        </div>
+                        <p class="card-category">Used Space</p>
+                        <h3 class="card-title">{{convertToGB(storageInfo['used'])}}/{{convertToGB(storageInfo['size'])}}
+                            <small>GB</small>
+                        </h3>
+                    </div>
+                    <div class="card-footer">
+                        <div class="stats">
+                            <i class="material-icons text-danger">warning</i>
+                            <a href="javascript:void(0)">Get More Space...</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="card card-stats">
+                    <div class="card-header card-header-success card-header-icon">
+                        <div class="card-icon">
+                            <i class="material-icons">store</i>
+                        </div>
+                        <p class="card-category">Revenue</p>
+                        <h3 class="card-title">{{revenue}}Dt</h3>
+                    </div>
+                    <div class="card-footer">
+                        <div class="stats">
+                            <i class="material-icons">update</i>
+                            {{ gainUpdatedAt | date}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="card card-stats">
+                    <div class="card-header card-header-danger card-header-icon">
+                        <div class="card-icon">
+                            <i class="material-icons">info_outline</i>
+                        </div>
+                        <p class="card-category">Feedbacks</p>
+                        <h3 class="card-title"> {{feedBackCount }}</h3>
+                    </div>
+                    <div class="card-footer">
+                        <div class="stats">
+                            <i class="material-icons">update</i>
+                            {{ date | date}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="card card-stats">
+                    <div class="card-header card-header-info card-header-icon">
+                        <div class="card-icon">
+                            <i class="fa fa-twitter"></i>
+                        </div>
+                        <p class="card-category">Learners</p>
+                        <h3 class="card-title">{{students.length}}</h3>
+                    </div>
+                    <div class="card-footer">
+                        <div class="stats">
+                            <i class="material-icons">update</i>
+                            {{ activeUsers[activeUsers.length-1].createdAt |date}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card card-chart">
+                    <div class="card-header text-white bg-minor-color card-header-text" style="height: 300px;">
+                        <div class="ct-chart" style="height: 300px;" id="dailySalesChart"></div>
+                    </div>
+                    <div class="card-body">
+                        <h4 class="card-title">Monthly Gains In 1K Unit</h4>
+                        <div class="row">
+                            <p class="card-category">
+                                <span class="text-success"><i class="fa fa-long-arrow-up"></i> 55% </span> increase in
+                                today sales.
+                            </p>
+                            <button class="btn btn-outline-success" (click)="getGainsChart()">Update</button>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="stats">
+                            <i class="material-icons">access_time</i> updated 4 minutes ago
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card card-chart">
+                    <div class="card-header text-white bg-major-color card-header-text" style="height: 300px;">
+                        <div class="ct-chart" style="height: 300px;" id="completedTasksChart"></div>
+                    </div>
+                    <div class="card-body">
+                        <h4 class="card-title">Predicted Gains(6 months) In 1K Unit</h4>
+                        <div class="row">
+                            <p class="card-category">
+                                <span class="text-success"><i class="fa fa-long-arrow-up"></i> 55% </span> increase in
+                                today sales.
+                            </p>
+                            <button class="btn btn-outline-primary" (click)="getPredictionsChart()" >Update</button>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="stats">
+                            <i class="material-icons">access_time</i> updated 4 minutes ago
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="col-md-4">
+              <div class="card card-chart">
+                  <div class="card-header card-header-warning">
+                      <div class="ct-chart" id="websiteViewsChart"></div>
+                  </div>
+                  <div class="card-body">
+                      <h4 class="card-title">Email Subscriptions</h4>
+                      <p class="card-category">Last Campaign Performance</p>
+                  </div>
+                  <div class="card-footer">
+                      <div class="stats">
+                          <i class="material-icons">access_time</i> campaign sent 2 days ago
+                      </div>
+                  </div>
+              </div>
+          </div> -->
+
+        </div>
+        <div *ngIf="role !== null && role != 'Admin'" class="form-container bg-white rounded p-4 shadow-lg"
+            style="max-width: 600px; margin: auto;">
+            <h3 class="text-center mb-4 font-weight-bold" style="font-size: 1.8rem; color: #000000;">
+                Accountant Report Writing
+            </h3>
+            <form #reportForm="ngForm" (ngSubmit)="onSubmit()">
+                <!-- Report Title -->
+                <div class="form-group text-center">
+                    <label for="reportTitle" class="font-weight-bold" style="font-size: 1.2rem;">Report Title</label>
+                    <input type="text" class="form-control text-center" id="reportTitle" name="title"
+                        [(ngModel)]="reportData.title" placeholder="Enter the report title" required
+                        style="font-size: 1rem;" />
+                </div>
+
+                <!-- Client Details -->
+                <div class="form-group text-center">
+                    <label for="clientDetails" class="font-weight-bold" style="font-size: 1.2rem;">Subject
+                        </label>
+                    <textarea class="form-control text-center" id="subject" name="subject"
+                        [(ngModel)]="reportData.subject" rows="3" placeholder="Enter Subject" required
+                        style="font-size: 1rem;"></textarea>
+                </div>
+
+                <!-- Date Picker -->
+                <div class="form-group text-center">
+                    <label for="reportDate" class="font-weight-bold" style="font-size: 1.2rem;">Report Date</label>
+                    <input type="date" class="form-control text-center" id="reportDate" name="date"
+                        [(ngModel)]="reportData.date" required style="font-size: 1rem;" />
+                </div>
+
+                <!-- Rich Text Editor -->
+                <div class="form-group text-center">
+                    <label for="reportContent" class="font-weight-bold" style="font-size: 1.2rem;">Report
+                        Content</label>
+                    <textarea id="reportContent" class="form-control border p-3" [(ngModel)]="reportData.content"
+                        name="reportContent" required style="min-height: 150px; font-size: 1rem; direction: ltr;"
+                        placeholder="Start typing your report here..."></textarea>
+                </div>
+
+                <!-- Actions -->
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg btn-block" [disabled]="!reportForm.valid"
+                        style="font-size: 1.1rem; font-weight: bold;">
+                        Submit Report
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary btn-lg btn-block mt-2" (click)="onClear()"
+                        style="font-size: 1.1rem; font-weight: bold;">
+                        Clear Form
+                    </button>
+                </div>
+            </form>
+        </div>
+
+<!-- Todos -->
+        <div *ngIf="role !== null && role == 'Admin'" class="row">
+            <div class="col-lg-6 col-md-12">
+                <app-todo></app-todo>
+            </div>
+            <!-- Reports -->
+            <div class="col-lg-6 col-md-12">
+                <div class="card">
+                    <div class="card-header card-header-warning">
+                        <h4 class="card-title ubuntu-bold">Accountants' Reports</h4>
+                        <p class="card-category ubuntu-medium">View Accountants' Daily Reports | {{date|date}}</p>
+                        <a routerLink="/reports" class="link ">View More</a>
+                    </div>
+                    <div class="card-body table-responsive">
+                        <table class="table table-hover">
+                            <thead class="text-warning">
+                                <th>ID</th>
+                                <th>Accountant Info</th>
+                                <th>Title</th>
+                                <th>Date</th>
+                                <th>Action</th>
+
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let report of reports">
+                                    <td class="w-50">
+                                        <i class="fa-solid fa-barcode"></i>
+                                        {{report._id}}</td>
+                                    <td class="w-75">
+                                        <div class="d-flex align-items-center">
+                                            <img src={{report.accountantId.avatar}} alt=""
+                                                style="width: 45px; height: 45px" class="rounded-circle mr-1" />
+
+                                            <div class="ms-3">
+                                                <p class="text-muted mb-0">
+                                                    <i class="fa-solid fa-barcode"></i>
+                                                    {{report.accountantId._id}}
+                                                </p>
+                                                <p class="fw-bold mb-1"><i class="fa-solid fa-user"></i>
+                                                    {{report.accountantId.firstName || ""}} {{report.accountantId.lastName || ""}}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>{{report.title || ''}}</td>
+                                    <td>{{report.date| date}}</td>
+                                    <td><button type="button" class="btn btn-outline-warning" (click)="viewReport(report._id)">View</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="">
+        <div class="col">
+
+            <nav *ngIf="role !== null && role == 'Admin'" class="bg-major-color rounded">
+                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                    <button class="nav-link active" id="nav-home-tab" data-toggle="tab" data-target="#nav-home"
+                        type="button" role="tab" aria-controls="nav-home" aria-selected="true">Active Users</button>
+                    <button class="nav-link" id="nav-profile-tab" data-toggle="tab" data-target="#nav-profile"
+                        type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Deleted
+                        Users</button>
+                    <button class="nav-link" id="nav-contact-tab" data-toggle="tab" data-target="#nav-contact"
+                        type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Courses</button>
+                    <button class="nav-link" id="nav-orders-tab" data-toggle="tab" data-target="#nav-orders"
+                        type="button" role="tab" aria-controls="nav-orders" aria-selected="false">Orders</button>
+                </div>
+            </nav>
+            <div *ngIf="role !== null && role == 'Admin'" class="tab-content" id="nav-tabContent">
+                <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                    <table class="table align-middle mb-0 bg-white">
+                        <thead class="bg-light">
+                            <tr>
+                                <th>Personal Information</th>
+                                <th>Id</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Created In</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let activeUser of activeUsers">
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <img src={{activeUser?.avatar}} alt="" style="width: 45px; height: 45px"
+                                            class="rounded-circle mr-1" />
+
+                                        <div class="ms-3">
+                                            <p class="fw-bold mb-1"><i class="fa-solid fa-user"></i>
+                                                {{activeUser?.firstName || ""}} {{ activeUser?.lastName || ""}} </p>
+                                            <p class="text-muted mb-0"><i class="fa-solid fa-envelope"></i>
+                                                {{activeUser?.email || ""}}</p>
+                                            <p class="text-muted mb-0"><i class="fa-solid fa-phone"></i>
+                                                {{activeUser?.phone ||""}}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <i class="fa-solid fa-barcode"></i>
+                                    {{activeUser?._id ||""}}</td>
+                                <td>
+                                    <p class="fw-normal mb-1">{{activeUser?.role ||"" }}</p>
+                                    <!-- <p class="text-muted mb-0">IT department</p> -->
+                                </td>
+                                <td>
+                                    <span class="badge rounded-pill d-inline rounded" [ngClass]="{
+                                        'badge-success': activeUser.status,
+                                        'badge-danger' : !activeUser.status
+                                      }">
+                                        {{ activeUser?.status ? 'Active' : 'Inactive' }}
+                                    </span>
+                                </td>
+                                <td>{{activeUser?.createdAt || "" | date }}</td>
+                                <td>
+                                  
+                                    <button *ngIf="activeUser.role !== 'Admin'" type="button"
+                                        class="btn btn-outline-warning btn-sm btn-rounded"
+                                        (click)="toggleStatus(activeUser._id)">
+                                        {{!activeUser?.status ? 'Validate' : 'Unvalidate'}}
+                                    </button>
+                                    <button *ngIf="activeUser.role !== 'Admin'" type="button"
+                                        class="btn btn-outline-danger btn-sm btn-rounded"
+                                        (click)="deleteUser(activeUser?._id)">
+                                        Delete
+                                    </button>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                    <table class="table align-middle mb-0 bg-white">
+                        <thead class="bg-light">
+                            <tr>
+                                <th>Personal Information</th>
+                                <th>Id</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Created In</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let inactiveUser of inactiveUsers">
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <img src={{inactiveUser?.avatar}} alt="" style="width: 45px; height: 45px"
+                                            class="rounded-circle mr-1" />
+
+                                        <div class="ms-3">
+                                            <p class="fw-bold mb-1"><i class="fa-solid fa-user"></i>
+                                                {{inactiveUser?.firstName || ""}} {{ inactiveUser?.lastName || ""}} </p>
+                                            <p class="text-muted mb-0"><i class="fa-solid fa-envelope"></i>
+                                                {{inactiveUser?.email || ""}}</p>
+                                            <p class="text-muted mb-0"><i class="fa-solid fa-phone"></i>
+                                                {{inactiveUser?.phone || ""}}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <i class="fa-solid fa-barcode"></i>
+                                    {{inactiveUser?._id || ""}}</td>
+                                <td>
+                                    <p class="fw-normal mb-1">{{inactiveUser?.role || ""}}</p>
+                                    <!-- <p class="text-muted mb-0">IT department</p> -->
+                                </td>
+                                <td>
+                                    <span [ngClass]="{
+                                        'badge badge-success rounded-pill d-inline rounded ': inactiveUser.status,
+                                        'badge badge-danger rounded-pill d-inline rounded ': !inactiveUser.status
+                                      }">
+                                        {{ inactiveUser?.active ? 'Active' : 'Inactive' }}
+                                    </span>
+                                </td>
+                                <td>{{inactiveUser?.createdAt  || "" | date}}</td>
+                                <td>
+                                    <button type="button" class="btn btn-outline-info btn-sm btn-rounded">
+                                        view
+                                    </button>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
+                    <table class="table align-middle mb-0 bg-white">
+                        <thead class="bg-light">
+                            <tr>
+                                <th>Name</th>
+                                <th>Id</th>
+                                <th>Price</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let course of courses">
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <img src={{course.image}} alt="" style="width: 45px; height: 45px"
+                                            class="rounded-circle" />
+                                        <div class="ms-3">
+                                            <p class="fw-bold mb-1">{{course.name}}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <p class="fw-normal mb-1">
+                                        <i class="fa-solid fa-barcode"></i>
+                                        {{course._id}}</p>
+                                </td>
+
+                                <td>{{course.priceHT}}Dt</td>
+                                <td>
+                                    <button type="button" (click)="goToEditCourse(course._id)" class="btn btn-outline-success btn-sm btn-rounded">
+                                        Edit
+                                    </button>
+                                    <button type="button" (click)="goToCourseDetails(course._id)" class="btn btn-outline-info btn-sm btn-rounded">
+                                        Details
+                                    </button>
+                                    <button type="button" (click)="deleteCourse(course._id)" class="btn btn-outline-danger btn-sm btn-rounded">
+                                        Delete
+                                    </button>
+                                </td>
+                            </tr>
+
+                    </table>
+                </div>
+                <div class="tab-pane fade show " id="nav-orders" role="tabpanel" aria-labelledby="nav-orders-tab">
+                    <table class="table align-middle mb-0 bg-white">
+                        <thead class="bg-light">
+                            <tr>
+                                <th>Id</th>
+                                <th>Learner</th>
+                                <th>Course</th>
+                                <th>Total</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let order of orders">
+                                <td>
+                                    <i class="fa-solid fa-barcode"></i>
+                                    {{order._id}}
+
+                                </td>
+
+                                <td>
+                                    <p class="fw-bold mb-1">
+                                        <i class="fa-solid fa-user"></i>
+                                        {{ 
+                                            (order.customerId?.firstName && order.customerId?.lastName) 
+                                            ? (order.customerId.firstName + ' ' + order.customerId.lastName) 
+                                            : ((order.archivedUserId?.firstName || 'deleted') + ' ' + (order.archivedUserId?.lastName || 'user'))
+                                        }}
+                                        <span *ngIf="!order.customerId ">
+                                            <i class="fa-solid fa-ban"></i>
+                                        </span>
+                                    </p>
+                                    <p class="text-muted mb-0">
+                                        <i class="fa-solid fa-envelope"></i>
+                                        {{ 
+                                            order.customerId?.email 
+                                            || order.archivedUserId?.email 
+                                            || 'deleted user' 
+                                        }}
+                                    </p>
+                                    <p class="text-muted mb-0">
+                                        <i class="fa-solid fa-phone"></i>
+                                        {{ 
+                                            order.customerId?.phone 
+                                            || order.archivedUserId?.phone 
+                                            || 'deleted user' 
+                                        }}
+                                    </p>
+                                    
+                                </td>
+
+                                <td>
+                                    <p *ngFor="let service of order.serviceIds">
+
+                                        {{service.name}}
+                                    </p>
+                                </td>
+                                <td>
+                                    <p>{{order.total}}Dt</p>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-outline-info btn-sm btn-rounded" (click)="viewOrder(order.invoiceId.path)">
+                                        view
+                                    </button>
+                                    <button type="button" class="btn btn-outline-danger btn-sm btn-rounded" (click)="deleteOrder(order._id)">
+                                        Delete
+                                    </button>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>

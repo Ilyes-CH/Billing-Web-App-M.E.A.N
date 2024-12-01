@@ -1,0 +1,41 @@
+.rotated{
+    position: fixed;
+    right: 0;
+    top: 50%;  
+    transform: rotate(90deg) translate(50%, -50%);
+    transform-origin: top right;
+    background-color: #007bff; /* Customize your color */
+    color: white;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    text-align: center;
+    border-radius: 5px 5px 0 0;
+}
+
+.bg-major-color {
+    background-color: #624e88;
+  }
+  .major-color {
+    color: #624e88;
+  }
+  .bg-second-major-color {
+    background-color: #8967b3;
+  }
+  .second-major-color {
+    color: #8967b3;
+  }
+  
+  .bg-minor-color {
+    background-color: #cb80ab;
+  }
+  .minor-color {
+    color: #cb80ab;
+  }
+  .second-bg-minor-color{
+      background-color: #E6D9A2;
+  }
+  .second-minor-color{
+      color: #E6D9A2;
+  }
+  

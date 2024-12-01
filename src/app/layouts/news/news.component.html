@@ -1,0 +1,36 @@
+<div class="container-style" style="margin-top: 15rem;">
+    <div class="text-center mb-5">
+        <h1 class="font-weight-bolder text-white ubuntu-light">Software Engineering News</h1>
+    </div>
+    <div *ngIf="newsArray.length == 0 || !newsArray " class="vh-100">
+        <div class="d-flex justify-content-center">
+            <div class="spinner-border" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+    </div>
+    <div class="mr-5 ml-5" *ngFor="let article of newsArray">
+        <div class="box-style card card-plain text-center" [style.backgroundImage]="'url(' + article.urlToImage + ')'"
+            style="background-size: cover; background-position: center; color: white;">
+            <div class="filtered card-overlay" style="
+            background-color: rgba(0, 0, 0, 0.795);
+             padding: 1rem; border-radius: 0.5rem; ">
+                <div class="ubuntu-light card-header text-white">
+                    {{article.source.name}}
+                </div>
+                <div class="card-body">
+                    <div class="col mt-3">
+                        <h5 class="card-title ubuntu-bolder text-white" style="font-size: 25px;">{{article.title}}</h5>
+                        <p class="card-text ubuntu-bold">{{article.description}}</p>
+                        <p class="card-text ubuntu-light" style="font-size: large; text-wrap: balance;">{{article.content}}</p>
+
+                        <button (click)="openNewTab(article.url)" class="btn btn-outline-primary">Read More</button>
+                    </div>
+                </div>
+                <div class="card-footer text-muted">
+                    {{article.publishedAt | date}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,181 @@
+<div class="card">
+    <div class="card-header card-header-tabs card-header-primary">
+        <div class="nav-tabs-navigation">
+            <div class="nav-tabs-wrapper">
+                <span class="nav-tabs-title">Tasks:</span>
+                <ul class="nav nav-tabs" data-tabs="tabs">
+                    <li class="nav-item">
+                        <a mat-button class="nav-link active" href="#todo" data-toggle="tab">
+                            <i class="material-icons">format_list_bulleted</i> Todo
+                            <div class="ripple-container"></div>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a mat-button class="nav-link " href="#profile" data-toggle="tab">
+                            <i class="material-icons">bug_report</i> Bugs
+                            <div class="ripple-container"></div>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a mat-button class="nav-link" href="#messages" data-toggle="tab">
+                            <i class="material-icons">code</i> Website
+                            <div class="ripple-container"></div>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a mat-button class="nav-link" href="#settings" data-toggle="tab">
+                            <i class="material-icons">cloud</i> Server
+                            <div class="ripple-container"></div>
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="tab-content ">
+            <div class="tab-pane active align-items-center" id="todo">
+                <div class="container-style">
+                    <!-- Add Task Form -->
+                    <div class="container d-flex justify-content-center align-items-center">
+                        <div class="row w-100"> <!-- Set width to 100% of the parent container -->
+                            <h1 class="w-100 text-center ubuntu-bold">To-Do Service</h1>
+                            <form #todoForm="ngForm" (ngSubmit)="addTask()" class="p-4 bg-light rounded shadow w-100">
+                                <!-- Task Input -->
+                                <div class="form-group mb-3">
+                                    <label for="task" class="form-label fw-bold">Task</label>
+                                    <input type="text" id="task" class="form-control" [(ngModel)]="todo.task"
+                                        name="task" placeholder="Enter a new task" required />
+                                </div>
+
+                                <!-- Dropdown for Categories -->
+                                <div class="form-group mb-3">
+                                    <label for="type" class="form-label fw-bold">Select Type of Task</label>
+                                    <select id="type" name="type" class="form-control" [(ngModel)]="todo.type" required>
+                                        <option value="Bugs">Bugs</option>
+                                        <option value="Server">Server</option>
+                                        <option value="Website">Website</option>
+                                    </select>
+                                </div>
+
+                                <!-- Submit Button -->
+                                <div class="form-group text-center">
+                                    <button type="submit" class="btn btn-purple w-100 fw-bold text-white"
+                                        style="background-color: purple;">
+                                        Add Task
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane " id="profile">
+                <table class="table">
+                    <tbody>
+                        <tr *ngFor="let todo of todos">
+                            <div  *ngIf="todo.type === 'bugs'">
+
+                                <td class="td-actions text-right w-100">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <!-- Checkbox -->
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox" value=""
+                                                    (click)="markDone(todo.id)">
+                                                <span class="form-check-sign">
+                                                    <span class="check"></span>
+                                                </span>
+                                            </label>
+                                        </div>
+    
+                                        <!-- Task Description -->
+                                        <p class="mb-0 flex-grow-1">{{todo.task}}</p>
+    
+                                        <!-- Remove Button -->
+                                        <button mat-raised-button type="button" matTooltip="Remove"
+                                            [matTooltipPosition]="'above'" (click)="deleteTask(todo.id)"
+                                            class="btn btn-danger btn-link btn-sm btn-just-icon">
+                                            <i class="material-icons">close</i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </div>>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="tab-pane" id="messages">
+                <table class="table">
+                    <tbody>
+                        <tr *ngFor="let todo of todos">
+                            <div *ngIf="todo.type === 'website'">
+                            <td class="td-actions text-right w-100">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <!-- Checkbox -->
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" value=""
+                                                (click)="markDone(todo.id)">
+                                            <span class="form-check-sign">
+                                                <span class="check"></span>
+                                            </span>
+                                        </label>
+                                    </div>
+
+                                    <!-- Task Description -->
+                                    <p class="mb-0 flex-grow-1">{{todo.task}}</p>
+
+                                    <!-- Remove Button -->
+                                    <button mat-raised-button type="button" matTooltip="Remove"
+                                        [matTooltipPosition]="'above'" (click)="deleteTask(todo.id)"
+                                        class="btn btn-danger btn-link btn-sm btn-just-icon">
+                                        <i class="material-icons">close</i>
+                                    </button>
+                                </div>
+                            </td>
+                            </div>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="tab-pane" id="settings">
+                <table class="table">
+                    <tbody>
+                        <tr *ngFor="let todo of todos">
+                            <div  *ngIf="todo.type === 'server'">
+                                <td class="td-actions text-right w-100">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <!-- Checkbox -->
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox" [checked]="todo.isDone"
+                                                    (change)="markDone(todo.id)">
+                                                <span class="form-check-sign">
+                                                    <span class="check"></span>
+                                                </span>
+                                            </label>
+                                        </div>
+    
+                                        <!-- Task Description -->
+                                        <p class="mb-0 flex-grow-1">{{todo.task}}</p>
+    
+                                        <!-- Remove Button -->
+                                        <button mat-raised-button type="button" matTooltip="Remove"
+                                            [matTooltipPosition]="'above'" (click)="deleteTask(todo.id)"
+                                            class="btn btn-danger btn-link btn-sm btn-just-icon">
+                                            <i class="material-icons">close</i>
+                                        </button>
+                                    </div>
+                                </td>
+
+                            </div>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

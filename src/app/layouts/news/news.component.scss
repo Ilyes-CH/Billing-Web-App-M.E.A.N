@@ -1,0 +1,32 @@
+.box-style{ 
+    border: 1px solid white;
+    color: white;
+    opacity: 0.8;
+    transition: transform 0.3s ease;
+    &:hover{
+        opacity: 1;
+        transform: translateY(-10px);
+    backdrop-filter:blur(5px);
+
+    }
+  }
+.filtered{
+    backdrop-filter:blur(20px);
+    transition: backdrop-filter 1s ease;
+
+    &:hover{
+    backdrop-filter:blur(5px);
+
+    }
+}
+.container-style{
+    transition: transform 0.3s ease;
+    &:hover{
+        opacity: 1;
+        transform: translateY(-18px);
+    }
+}
+.whiteBorder{
+    border: 1px solid white;
+
+}

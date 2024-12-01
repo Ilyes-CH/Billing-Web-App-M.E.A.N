@@ -1,0 +1,19 @@
+<div class="m-2">
+    <div class="  box-style card card-chart bg-dark" style="width: 25rem;">
+        <img src={{course.image}} height="250px" class="card-img-top" alt="...">
+        <div class="card-body">
+            <h5 class="card-title">{{course.name}}</h5>
+            <p class="card-text">
+                this course lasts for {{course.details.duration}} months
+                it is divided into {{course.details.parts}} parts
+
+            </p>
+            <div class="text-center">
+                <button class="btn btn-outline-success mr-1" (click)="addToCart(course._id)"><i
+                        class="material-icons">shopping_cart</i> Add</button>
+                <button class="btn btn-outline-success mr-1" (click)="getPricing(course)">Get Pricing</button>
+                <button class="btn btn-outline-info ml-1" (click)="getCourseDetails(course._id)">Get Details</button>
+            </div>
+        </div>
+    </div>
+</div> 

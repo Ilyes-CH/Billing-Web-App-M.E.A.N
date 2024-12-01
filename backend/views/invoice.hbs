@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notice</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f8f9fa;
+      color: #333;
+    }
+    .Notice-container {
+      max-width: 800px;
+      margin: auto;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #007bff;
+      padding-bottom: 15px;
+    }
+    .header img {
+      max-width: 150px;
+    }
+    .header .company-details {
+      text-align: right;
+    }
+    .company-details h2 {
+      margin: 0;
+      color: #007bff;
+    }
+    .Notice-details {
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .Notice-details .Notice-info {
+      font-size: 14px;
+      color: #666;
+    }
+    .table-container {
+      margin-top: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+    th {
+      background-color: #007bff;
+      color: #fff;
+    }
+    .total-row {
+      font-weight: bold;
+      color: #007bff;
+    }
+    .footer {
+      text-align: center;
+      font-size: 12px;
+      color: #999;
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+  <div class="Notice-container">
+    <!-- Header Section -->
+    <div class="header">
+      <div class="company-logo">
+        <img src="{{companyLogo}}" alt="Company Logo">
+      </div>
+      <div class="company-details">
+        <h2>{{companyName}}</h2>
+        <p>{{companyAddress}}<br>{{companyEmail}} | {{companyPhone}}</p>
+      </div>
+    </div>
+
+    <!-- Notice Info Section -->
+    <div class="Notice-details">
+      <div class="Notice-info">
+        <p><strong>Notice No:</strong> {{InvoiceID}}</p>
+        <p><strong>Date:</strong> {{invoiceDate}}</p>
+      </div>
+      <div class="client-info">
+        <p><strong>Bill To:</strong></p>
+        <p>{{clientFirstName}} {{clientLastName}}<br>{{clientAddress}}<br>{{clientEmail}}</p>
+      </div>
+    </div>
+
+    <!-- Table Section -->
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Description</th>
+            <th>Quantity</th>
+            <th>Price (HT)</th>
+            <th>Tax Amount</th>
+            <th>Unit Price After Tax</th>
+            <th>Total After Tax</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each items}}
+          <tr>
+            <td>{{name}}</td>
+            <td>{{quantity}}</td>
+            <td>{{priceHT}} Dt</td>
+            <td>{{taxAmount}}</td>
+            <td>{{priceAfterTax}} Dt</td>
+            <td>{{totalAfterTax}} Dt</td>
+          </tr>
+          {{/each}}
+
+          <tr></tr>
+          <tr class="total-row">
+            <td colspan="4" style="text-align: right;">Subtotal:</td>
+            <td>{{subtotal}} Dt</td>
+          </tr>
+          <tr class="total-row">
+            <td colspan="4" style="text-align: right;">Tax ({{taxRate}}%):</td>
+            <td>{{taxAmount}}</td>
+          </tr>
+          <tr class="total-row">
+            <td colspan="4" style="text-align: right;">Total:</td>
+            <td>{{totalAmount}} Dt</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Footer Section -->
+    <div class="footer">
+      <p>Thank you for your business!</p>
+      <p>If you have any questions about this Notice, please contact us at {{companyEmail}} or {{companyPhone}}</p>
+    </div>
+  </div>
+</body>
+</html>

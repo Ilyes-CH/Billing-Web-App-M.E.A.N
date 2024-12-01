@@ -1,0 +1,70 @@
+<div class="container-fluid vh-100" style="margin-top: 15rem;">
+    <div class="row">
+        <aside class="col-lg-9">
+            <div class="card">
+                <div class="table-responsive">
+                    <table class="table table-borderless table-shopping-cart">
+                        <thead class="text-muted">
+                            <tr class="small text-uppercase">
+                                <th scope="col">Product</th>
+                                <th scope="col" width="120">Quantity</th>
+                                <th scope="col" class="text-right d-none d-md-block" width="200"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let course of cartCourses; let i = index">
+                                <td>
+                                    <figure class="itemside align-items-center">
+                                        <div class="aside"><img src="{{course.image}}" width="50" height="50"
+                                                class="rounded-circle"></div>
+                                        <figcaption class="info"> <a style="font-size: 15px;"
+                                                class="title text-dark font-weight-bold"
+                                                data-abc="true">{{course.name}}</a>
+                                            <p class="text-muted small">Parts: {{course.details.parts}} <br> Duration:
+                                                {{course.details.duration}} months</p>
+                                        </figcaption>
+                                    </figure>
+                                </td>
+                                <td>
+
+                                    <input type="number" id="q_{{i}}" [(ngModel)]="cart[i].quantity"
+                                        name="quantity{{ i }}" placeholder="{{cart[i].quantity}}">
+                                </td>
+
+                                <td class="text-right d-none d-md-block">
+
+                                    <button class="btn btn-light" type="button" (click)="removeFromCart(course._id)">
+                                        Remove</button>
+
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </aside>
+        <aside class="col-lg-3">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <form>
+                        <div class="form-group"> <label>Have coupon?</label>
+                            <div class="input-group"> <input type="text" class="form-control coupon" name=""
+                                    placeholder="Coupon code"> <span class="input-group-append"> <button
+                                        class="btn btn-primary btn-apply coupon">Apply</button> </span> </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+
+                    <button class="btn btn-out btn-primary btn-square btn-main" data-abc="true" (click)="placeOrder()">
+                        Make Purchase
+                    </button> <a routerLink="/courses" class="btn btn-out btn-success btn-square btn-main mt-2">Continue
+                        Shopping</a>
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>

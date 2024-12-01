@@ -1,0 +1,75 @@
+/* You can add global styles to this file, and also import other style files */
+.ubuntu-light {
+  font-family: "Ubuntu", sans-serif;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.ubuntu-regular {
+  font-family: "Ubuntu", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.ubuntu-medium {
+  font-family: "Ubuntu", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.ubuntu-bold {
+  font-family: "Ubuntu", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.ubuntu-light-italic {
+  font-family: "Ubuntu", sans-serif;
+  font-weight: 300;
+  font-style: italic;
+}
+
+.ubuntu-regular-italic {
+  font-family: "Ubuntu", sans-serif;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.ubuntu-medium-italic {
+  font-family: "Ubuntu", sans-serif;
+  font-weight: 500;
+  font-style: italic;
+}
+
+.ubuntu-bold-italic {
+  font-family: "Ubuntu", sans-serif;
+  font-weight: 700;
+  font-style: italic;
+}
+
+
+.bg-major-color {
+  background-color: #624e88;
+}
+.major-color {
+  color: #624e88;
+}
+.bg-second-major-color {
+  background-color: #8967b3;
+}
+.second-major-color {
+  color: #8967b3;
+}
+
+.bg-minor-color {
+  background-color: #cb80ab;
+}
+.minor-color {
+  color: #cb80ab;
+}
+.second-bg-minor-color{
+    background-color: #E6D9A2;
+}
+.second-minor-color{
+    color: #E6D9A2;
+}

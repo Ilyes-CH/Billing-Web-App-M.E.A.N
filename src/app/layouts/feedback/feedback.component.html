@@ -1,0 +1,39 @@
+<div class="container-style vh-100 " style="margin-top: 15rem;">
+
+    <div class="form-container rounded" style="max-width: 600px; margin: auto;">
+        <form [formGroup]="feedbackForm" (ngSubmit)="onSubmit()">
+            <div class="form-group">
+                <label for="feedback">Feedback</label>
+                <select id="feedback" formControlName="type" class="form-control">
+                    <option class="text-white" value="">Select Feedback Type</option>
+                    <option *ngFor="let option of feedbackOptions" [value]="option">{{ option }}</option>
+                </select>
+                <div *ngIf="feedbackForm.get('type')?.touched && feedbackForm.get('type')?.invalid" class="text-danger">
+                    Feedback type is required.
+                </div>
+            </div>
+        
+            <div class="form-group">
+                <label for="topic">Topic</label>
+                <select id="topic" formControlName="subject" class="form-control">
+                    <option class="text-white" value="">Select Topic</option>
+                    <option *ngFor="let topic of topics" [value]="topic">{{ topic }}</option>
+                </select>
+                <div *ngIf="feedbackForm.get('subject')?.touched && feedbackForm.get('subject')?.invalid" class="text-danger">
+                    Topic is required.
+                </div>
+            </div>
+        
+            <div class="form-group">
+                <label for="comments">Additional Comments</label>
+                <textarea id="comments" formControlName="comments" class="text-white form-control" rows="4"></textarea>
+                <div *ngIf="feedbackForm.get('comments')?.touched && feedbackForm.get('comments')?.invalid" class="text-danger">
+                    Comments are required and cannot exceed 500 characters.
+                </div>
+            </div>
+        
+            <button type="submit" class="btn btn-primary" [disabled]="feedbackForm.invalid">Submit</button>
+        </form>
+        
+    </div>
+</div>

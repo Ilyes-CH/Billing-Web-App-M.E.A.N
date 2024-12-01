@@ -1,0 +1,51 @@
+<!-- feedbacks -->
+<div class="container-style " [ngClass]="{'vh-100': feedbacks.length == 0}">
+    <!-- Loading Spinner -->
+    <div *ngIf="isLoading" style="margin-top: 15rem;" [ngClass]="{'vh-100': feedbacks.length == 0}"
+        class="d-flex justify-content-center">
+        <div class="spinner-border" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="error && !isLoading" class="alert alert-danger mt-5 mx-3">
+        <strong>Error:</strong> Unable to fetch feedback details. Please try again later.
+    </div>
+
+    <!-- feedback Details -->
+    <div class="mr-5 ml-5">
+        <div *ngIf="!error && !isLoading" class="card border-primary mb-3" style="margin-top: 15rem;">
+            <div class="col-lg-6 col-md-12" style="max-width: 100%;" *ngFor="let feedback of feedbacks">
+                <div class="card border-dark mb-3">
+                    <div class="card-header ubuntu-bold" style="font-size: 40px;">feedback Details</div>
+                    <div class="card-body text-dark">
+                        <h5 class="card-title ubuntu-bold" style="font-size: 30px;"><small class="text-muted">Subject:
+                            </small> {{ feedback?.subject || 'No Subject
+                            Available'
+                            }}</h5>
+                        <h5 class="card-title text-muted"
+                            [ngClass]="{red: feedback.type == 'Negative',green: feedback.type == 'Positive'}">
+                            {{ feedback?.type || 'No Type
+                            Available'
+                            }}</h5>
+                        <p class="text-muted">{{feedback.date || 'Cannot Get Date' | date}}</p>
+                        <div class="align-items-start d-flex">
+
+                            <img src={{feedback?.commentorId.avatar}} alt="" style="width: 45px; height: 45px"
+                                class="rounded-circle mr-1" />
+                            <p>By {{feedback?.commentorId?.firstName || 'No user'}} {{feedback?.commentorId?.lastName || 'No user'}}</p>
+                            <p></p>
+                        </div>
+
+                        <p class="card-text mt-4" style="font-size: 25px;"><small class="text-muted">Comment: </small>
+                            {{ feedback?.comments || 'No comments available for this feedback.' }}
+                        </p>
+                        <button class="btn btn-danger" (click)="deleteFeedback(feedback._id)">delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

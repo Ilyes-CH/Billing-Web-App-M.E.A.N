@@ -1,0 +1,80 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-8">
+        <div class="card">
+          <div class="card-header  bg-major-color">
+            <h4 class="card-title second-minor-color">Edit Profile</h4>
+            <p class="card-category">Edit your profile</p>
+          </div>
+          <div class="card-body bg-dark">
+            <form #editUserForm="ngForm" (ngSubmit)="save()">
+              <div class="row">
+                <div class="col-md-6">
+                  <input class="form-control text-white" name="firstName" [value]="user.firstName"
+                    [(ngModel)]="user.firstName" type="text">
+
+                </div>
+                <div class="col-md-6">
+                  <input class="form-control text-white" name="lastName" [value]="user.lastName"
+                    [(ngModel)]="user.lastName" type="text">
+                </div>
+              </div>
+
+              <div class="row mt-2">
+                <div class="col-md-6">
+                  <input type="email" class="form-control text-dark border-0" readonly name="email"
+                    [(ngModel)]="user.email" [value]="user.email">
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <input type="tel" class="form-control  text-white" name="phone" [(ngModel)]="user.phone"
+                    [value]="user.phone">
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4">
+
+                  <input class="form-control  text-white" [(ngModel)]="user.city" name="city" [value]="user.city" type="text">
+
+                </div>
+                <div class="col-md-4">
+
+                  <input class="form-control  text-white" [(ngModel)]="user.country" name="country" [value]="user.country" type="text">
+
+                </div>
+                <div class="col-md-4">
+
+                  <input class="form-control  text-white" [(ngModel)]="user.zip" name="zip" [value]="user.zip" type="number">
+
+                </div>
+              </div>
+              <br>
+
+              <button type="submit" class="btn bg-second-major-color  pull-right">Update Profile</button>
+              <div class="clearfix"></div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card card-profile">
+          <div class="card-avatar">
+            <a href="javascript:void(0)">
+              <img class="img" src="{{user.image}}" />
+            </a>
+          </div>
+          <div class="card-body">
+            <h6 class="card-category text-gray">{{user.role}}</h6>
+            <h4 class="card-title">{{user.firstName}} {{user.lastName}}</h4>
+            <p class="card-description">
+              Don't be scared of the truth because we need to restart the human foundation in truth And I love you like
+              Kanye loves Kanye I love Rick Owens’ bed design but the back is...
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

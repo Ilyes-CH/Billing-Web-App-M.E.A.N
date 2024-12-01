@@ -1,0 +1,79 @@
+<div class="container vh-100 d-flex flex-column justify-content-center align-items-center text-center">
+  <!-- Header Text -->
+  <h2 class="text-white mb-5 ubuntu-bold">
+    Get Pricing
+  </h2>
+
+  <!-- Table Section -->
+  <div class="table-responsive w-100">
+    <table class="table table-hover table-bordered rounded bg-white text-center">
+      <thead class="bg-dark text-white">
+        <tr>
+          <th>Name</th>
+          <th>Duration</th>
+          <th>Quantity</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let course of getCourses; let i = index">
+          <td>
+            <div class="d-flex align-items-center">
+              <img src="{{course.image}}" alt="Course Image" class="rounded-circle mr-3" style="width: 45px; height: 45px;" />
+              <div>
+                <p class="font-weight-bold mb-0">{{course.name}}</p>
+              </div>
+            </div>
+          </td>
+          <td>{{course.details.duration}} Months</td>
+          <td>
+            <form>
+              <input
+                type="number"
+                placeholder="Add Quantity"
+                [(ngModel)]="course.quantity"
+                name="quantity{{ i }}"
+                class="form-control"
+                style="width: 100px; margin: 0 auto;"
+              />
+            </form>
+          </td>
+          <td>
+            <button type="button" class="btn btn-danger btn-sm" (click)="delete(course._id)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pricing Section -->
+  <div class="card mt-4 shadow-lg bg-dark  w-100" style="max-width: 600px;">
+    <div class="card-body">
+      <div class="d-flex flex-column align-items-center">
+        <button type="button" class="btn btn-primary btn-sm mb-4" (click)="submitNotice()">Get Pricing For Courses</button>
+
+        <div class="form-group w-100">
+          <label for="accountants" class="font-weight-bold text-dark">Select Accountant</label>
+          <div class="input-group">
+            <select
+              name="accountants"
+              id="accountants"
+              class="custom-select"
+              #team="ngModel"
+              [(ngModel)]="accountant.id"
+              required
+            >
+              <option value="" disabled selected>Select an accountant</option>
+              <optgroup label="Accountants">
+                <option *ngFor="let accountant of accountants" [value]="accountant._id">
+                  {{ accountant.firstName }} {{ accountant.lastName }}
+                </option>
+              </optgroup>
+            </select>
+          </div>
+          <small *ngIf="team.touched && team.invalid" class="text-danger mt-2">Please select an accountant</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

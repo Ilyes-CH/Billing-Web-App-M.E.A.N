@@ -1,0 +1,74 @@
+<div class="container-style mb-5">
+    <form #courseForm="ngForm" (ngSubmit)="onSubmit(courseForm)" class="m-2">
+        <!-- Spinner -->
+        <div *ngIf="error !== null && error" style="margin-top: 20rem;">
+            <div class="d-flex justify-content-center">
+                <div class="spinner-border" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+        </div>
+      
+        <!-- Main Form -->
+        <div class="container-style row">
+           
+            <!-- Course Info Section -->
+            <div *ngIf="error == null || !error" class="mr-5 ml-5 box-style card card-chart bg-dark"
+                style="width: 25rem; margin-top: 20rem;">
+                <img [src]="course.image" height="250px" class="card-img-top" alt="Course Image" />
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="name" class="text-white">Course Name</label>
+                        <input type="text" id="name" name="name" class="form-control text-white"
+                            style="font-size: 20px;" [(ngModel)]="course.name" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="duration" class="text-white">Course Duration</label>
+                        <input type="text" id="duration" name="duration" class="form-control text-white"
+                            style="font-size: 20px;" [(ngModel)]="course.details.duration" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="priceHT" class="text-white">Course priceHT</label>
+                        <input type="text" id="priceHT" name="priceHT" class="form-control text-white"
+                            style="font-size: 20px;" [(ngModel)]="course.priceHT" required />
+                    </div>
+                    <div class="text-center">
+                        <button type="button"  class="btn  btn-outline-light " (click)="addPart()">
+                            Add Part
+                        </button>
+                        <button type="button"  class="btn  btn-outline-danger " (click)="removePart()">
+                            Remove Part
+                        </button>
+                        <button type="submit" class="btn btn-outline-success mr-1">Save Changes</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course Parts Section -->
+            <div class="row ml-3 text-white margin-top-sm" style="margin-top: 20rem;">
+                <div class="col ml-3" *ngFor="let part of course.details.courses; let i = index">
+                    <div class="form-group">
+                        <label for="partName-{{ i }}" class="text-white">Part {{ i + 1 }} Name</label>
+                        <input type="text" id="partName-{{ i }}" name="partName-{{ i }}" class="form-control text-white"
+                            style="font-size: 20px;" [(ngModel)]="part.courseName" required />
+                    </div>
+                    <div class="col ml-3">
+                        <h5 class="ubuntu-bold text-white">Modules:</h5>
+                        <div class="form-group" *ngFor="let module of part.modules; let j = index">
+                            <input type="text" id="module-{{ i }}-{{ j }}" name="module-{{ i }}-{{ j }}"
+                                class="form-control text-white" style="font-size: 20px;" [(ngModel)]="part.modules[j]"
+                                required />
+                            <button type="button" class="btn btn-outline-danger mt-1" (click)="removeModule(i, j)">
+                                Remove Module
+                            </button>
+                        </div>
+                        <button type="button" class="btn btn-outline-primary mt-2" (click)="addModule(i)">
+                            Add Module
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </form>
+</div>
