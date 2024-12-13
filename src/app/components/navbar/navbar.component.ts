@@ -1,7 +1,7 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 import { ROUTES } from '../sidebar/sidebar.component';
-import { Location, LocationStrategy, PathLocationStrategy } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Location} from '@angular/common';
+import { Router } from '@angular/router';
 import { jwtDecode } from 'jwt-decode';
 import { UserService } from 'app/Services/user.service';
 import { AuthService } from 'app/Services/auth.service';
@@ -24,7 +24,7 @@ export class NavbarComponent implements OnInit {
     public avatar : string 
 
 
-    constructor(private activatedRoute: ActivatedRoute,private auth:AuthService,location: Location, private element: ElementRef, private router: Router, private userService: UserService) {
+    constructor(private auth:AuthService,location: Location, private element: ElementRef, private router: Router, private userService: UserService) {
         this.location = location;
         this.sidebarVisible = false;
     }

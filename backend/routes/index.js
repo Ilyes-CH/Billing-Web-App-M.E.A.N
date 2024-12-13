@@ -20,8 +20,6 @@ const feedbackRouter = require('./feedBackRoutes')
 const predictionsRouter = require('./predictionRoutes')
 // Use the imported routes
 router.use('/users', usersRouter);
-// router.use('/auth', signUpRouter)
-// router.use('/auth', loginRouter)
 router.use('/invoices', invoiceRouter)
 router.use('/notices', noticeRouter)
 router.use('/services', serviceRouter)
@@ -36,8 +34,7 @@ router.use('/feedback',feedbackRouter)
 router.use('/reports',reportsRouter)
 router.use('/predictions',predictionsRouter)
 
-// Use middleware on specific routes
-// router.use('/orders/addOrder', checkCustomHeader); EXAMPLE
+
 
 
 module.exports = router;

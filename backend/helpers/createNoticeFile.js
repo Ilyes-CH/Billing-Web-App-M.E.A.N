@@ -39,9 +39,9 @@ const createNoticeFile = async (noticeInfo) => {
     try {
         const pdfBuffer = await pdfGenerator(data, 'notice.hbs');
         if (pdfBuffer) {
-            const dirPath = path.join(__dirname, '../uploads/pdfs');
-            const fileName = `Notice-${data.NoticeId}.pdf`;
-            const filePath = path.join(dirPath, fileName);
+                const dirPath = path.join(__dirname, '../uploads/pdfs');
+                const fileName = `Notice-${data.NoticeId}.pdf`;
+                const filePath = path.join(dirPath, fileName);
 
             if (!fs.existsSync(dirPath)) {
                 fs.mkdirSync(dirPath, { recursive: true });

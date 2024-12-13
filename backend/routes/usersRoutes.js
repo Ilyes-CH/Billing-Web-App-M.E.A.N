@@ -25,6 +25,8 @@ const Gain = require('../models/gains')
 const Order = require('../models/order')
 const Feedback = require('../models/feedback');
 const Invoice = require('../models/invoice')
+const jwt = require("jsonwebtoken")
+
 const PORT = process.env.PORT
 
 
@@ -156,8 +158,16 @@ router.post('/auth/signup', multer({ storage: multerConfig }).single('img'), che
 
 //Actions on All users
 
-router.get('/', (req, res) => {
+router.get('/',authenticateToken ,(req, res) => {
 
+  const authHeader = req.headers['Authorization'] || req.headers["authorization"]
+  const token = authHeader && authHeader.split(' ')[1]
+  console.log("verify token:", token)
+  const decoded = jwt.decode(token)
+  if (decoded.role && decoded.role !== "Admin") {
+    res.status(403).json({ message: `Unauthorized` })
+
+  } else {
   User.find().then((docs) => {
 
     console.log("\x1b[35m*******************GET Users Route\x1b[0m")
@@ -173,10 +183,20 @@ router.get('/', (req, res) => {
 
     res.status(500).json({ message: 'Internal Server Error' })
   })
+}
 })
 
-router.get('/archivedUsers', (req, res) => {
+router.get('/archivedUsers', authenticateToken,(req, res) => {
+  console.log("\x1b[35m*******************Get All Archived Users Route\x1b[0m");
 
+  const authHeader = req.headers['Authorization'] || req.headers["authorization"]
+  const token = authHeader && authHeader.split(' ')[1]
+  console.log("verify token:", token)
+  const decoded = jwt.decode(token)
+  if (decoded.role && decoded.role !== "Admin") {
+    res.status(403).json({ message: `Unauthorized` })
+
+  } else {
   UserArchive.find().then((docs) => {
 
     console.log("\x1b[35m*******************GET Deleted Users Route\x1b[0m")
@@ -192,12 +212,20 @@ router.get('/archivedUsers', (req, res) => {
 
     res.status(500).json({ message: 'Internal Server Error' })
   })
+}
 })
 
 
-router.delete('/', (req, res) => {
+router.delete('/', authenticateToken,(req, res) => {
   console.log("\x1b[35m*******************Delete Users Route\x1b[0m")
+  const authHeader = req.headers['Authorization'] || req.headers["authorization"]
+  const token = authHeader && authHeader.split(' ')[1]
+  console.log("verify token:", token)
+  const decoded = jwt.decode(token)
+  if (decoded.role && decoded.role !== "Admin") {
+    res.status(403).json({ message: `Unauthorized` })
 
+  } else {
   User.deleteMany().then((response) => {
 
     response.deletedCount > 0 ? res.status(200).json({ message: 'Users are deleted' }) : res.status(304).json({ message: 'No Users were deleted' })
@@ -207,13 +235,21 @@ router.delete('/', (req, res) => {
 
     res.status(500).json({ message: 'Internal Server Error' })
   })
-
+  }
 })
 
 //Actions on Single user
 
-router.get('/:id', (req, res) => {
+router.get('/:id', authenticateToken,(req, res) => {
   console.log("\x1b[35m*******************GET User By Id Route\x1b[0m")
+  const authHeader = req.headers['Authorization'] || req.headers["authorization"]
+  const token = authHeader && authHeader.split(' ')[1]
+  console.log("verify token:", token)
+  const decoded = jwt.decode(token)
+  if (decoded.role && decoded.role !== "Admin") {
+    res.status(403).json({ message: `Unauthorized` })
+
+  } else {
   const id = req.params.id
   if (isValidObjectId(id)) {
 
@@ -247,14 +283,14 @@ router.get('/:id', (req, res) => {
   } else {
     res.sendStatus(400)
   }
-
+  }
 })
 
 
 
 
-router.put('/', (req, res) => {
-  console.log("\x1b[35m*******************Update User Route\x1b[0m")
+router.put('/', authenticateToken,(req, res) => {
+ 
   const id = req.body.id
   console.log(req.body)
   if (isValidObjectId(id)) {
@@ -271,14 +307,21 @@ router.put('/', (req, res) => {
     res.sendStatus(400)
   }
 
-
+  
 
 })
 
 //delete user with their notices
-router.delete('/:id', (req, res) => {
+router.delete('/:id', authenticateToken,(req, res) => {
   console.log("\x1b[35m******************* Delete User By Id Route *******************\x1b[0m");
+  const authHeader = req.headers['Authorization'] || req.headers["authorization"]
+  const token = authHeader && authHeader.split(' ')[1]
+  console.log("verify token:", token)
+  const decoded = jwt.decode(token)
+  if (decoded.role && decoded.role !== "Admin") {
+    res.status(403).json({ message: `Unauthorized` })
 
+  } else {
   const id = req.params.id;
   if (!id) return res.status(400).json({ message: 'No User Id Supplied' });
 
@@ -385,11 +428,20 @@ router.delete('/:id', (req, res) => {
       console.error(`\x1b[31mError deleting notices:\x1b[0m ${err}`);
       res.status(500).json({ message: 'Error deleting notices' });
     });
+  }
 });
 
 
-router.get('/updateStatus/:id', (req, res) => {
+router.get('/updateStatus/:id', authenticateToken,(req, res) => {
   console.log("\x1b[35m*******************Validate User By Id Route\x1b[0m")
+  const authHeader = req.headers['Authorization'] || req.headers["authorization"]
+  const token = authHeader && authHeader.split(' ')[1]
+  console.log("verify token:", token)
+  const decoded = jwt.decode(token)
+  if (decoded.role && decoded.role !== "Admin") {
+    res.status(403).json({ message: `Unauthorized` })
+
+  } else {
   const id = req.params.id
   if (!id) {
     res.sendStatus(400)
@@ -418,7 +470,7 @@ router.get('/updateStatus/:id', (req, res) => {
     }
 
   }
-
+  }
 })
 
 module.exports = router

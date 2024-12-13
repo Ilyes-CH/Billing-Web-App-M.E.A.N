@@ -1,11 +1,20 @@
 const express = require('express')
 const Prediction = require('../models/prediction')
+const authenticateToken = require('../middlewares/authenticateToken')
+const jwt = require("jsonwebtoken")
 const router = express.Router()
 
 
-router.get('/', async (req, res) => {
+router.get('/', authenticateToken,async (req, res) => {
     console.log("\x1b[35m*******************GET Predictions Route\x1b[0m")
-
+    const authHeader = req.headers['Authorization'] || req.headers["authorization"]
+    const token = authHeader && authHeader.split(' ')[1]
+    console.log("verify token:", token)
+    const decoded = jwt.decode(token)
+    if (decoded.role && decoded.role !== "Admin" && decoded.role !== "Accountant") {
+      res.status(403).json({ message: `Unauthorized` })
+  
+    } else {
     try {
         const preds = await Prediction.find()
         preds.length == 0 ? res.status(404).json({ message: 'No predicions' }) : res.status(200).json({ message: 'Found predictions', data: preds })
@@ -15,6 +24,7 @@ router.get('/', async (req, res) => {
 
         res.status(500).json({ message: 'Internal Server Error' })
     }
+}
 })
 
 

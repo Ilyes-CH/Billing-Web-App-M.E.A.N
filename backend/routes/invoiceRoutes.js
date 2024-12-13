@@ -9,6 +9,9 @@
 const express = require('express')
 const Invoice = require('../models/invoice')
 const verifyObjectId = require('../helpers/verifyObjectId')
+const authenticateToken = require('../middlewares/authenticateToken')
+const jwt = require("jsonwebtoken")
+
 const router = express.Router();
 
 // router.post('/addInvoice', multer({ storage: multerPdfConfig }).single('pdf'), (req, res) => {
@@ -40,10 +43,18 @@ const router = express.Router();
 // });
 
 //send all invoices to Accountant
-router.get('/', (req, res) => {
+router.get('/', authenticateToken, (req, res) => {
   console.log("\x1b[35m*******************Get All Invoices Route\x1b[0m");
 
-  Invoice.find().populate(['serviceIds', 'customerId', 'orderId','archivedUserId']).then((docs) => {
+  const authHeader = req.headers['Authorization'] || req.headers["authorization"]
+  const token = authHeader && authHeader.split(' ')[1]
+  console.log("verify token:", token)
+  const decoded = jwt.decode(token)
+  if (decoded.role && decoded.role !== "Admin" && decoded.role !== "Accountant") {
+    res.status(403).json({ message: `Unauthorized` })
+
+  } else {
+  Invoice.find().populate(['serviceIds', 'customerId', 'orderId', 'archivedUserId']).then((docs) => {
 
     if (docs) {
       console.log(docs)
@@ -58,10 +69,10 @@ router.get('/', (req, res) => {
 
   })
 
-
+  }
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', authenticateToken, (req, res) => {
   console.log("\x1b[35m*******************Delete Invoice By Id Route\x1b[0m");
 
   if (req.params.id) {
@@ -74,10 +85,10 @@ router.delete('/:id', (req, res) => {
       Invoice.deleteOne({ _id: req.params.id }).then((response) => {
         response.deletedCount == 1 ? res.status(200).json({ message: 'Invoice Deleted' }) : res.status(304).json({ message: 'Error Deleting' })
       })
-      .catch((e) => {
-        console.log("\x1b[31m*******************Error in deleting the the invoice: \x1b[0m", e);
-        res.status(500).json({ message: 'Internal Server Error' });
-      })
+        .catch((e) => {
+          console.log("\x1b[31m*******************Error in deleting the the invoice: \x1b[0m", e);
+          res.status(500).json({ message: 'Internal Server Error' });
+        })
     }
   }
   else {
@@ -86,7 +97,7 @@ router.delete('/:id', (req, res) => {
 });
 
 //get all invoices for each customer
-router.get('/:customerId', (req, res) => {
+router.get('/:customerId', authenticateToken, (req, res) => {
   console.log("\x1b[35m*******************Get Invoices By Customer Id Route\x1b[0m");
   const customerId = req.params.customerId
   if (customerId) {
@@ -122,7 +133,7 @@ router.get('/:customerId', (req, res) => {
 });
 
 //Get Invoice By its Id
-router.get('/invoice/:id', (req, res) => {
+router.get('/invoice/:id' , authenticateToken, (req, res) => {
   console.log("\x1b[35m*******************Get Invoice By Id Route\x1b[0m");
   if (req.params.id) {
     console.log("Invoice Id:", req.params.id);

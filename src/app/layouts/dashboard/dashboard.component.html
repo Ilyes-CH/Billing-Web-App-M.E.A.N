@@ -8,7 +8,13 @@
                             <i class="material-icons">content_copy</i>
                         </div>
                         <p class="card-category">Used Space</p>
-                        <h3 class="card-title">{{convertToGB(storageInfo['used'])}}/{{convertToGB(storageInfo['size'])}}
+                        <h3 class="card-title">{{
+                            storageInfo ? convertToGB(storageInfo['used']) : 0
+                            }}
+                            /
+                            {{
+                            storageInfo ? convertToGB(storageInfo['size']) : 0
+                            }}
                             <small>GB</small>
                         </h3>
                     </div>
@@ -66,7 +72,8 @@
                     <div class="card-footer">
                         <div class="stats">
                             <i class="material-icons">update</i>
-                            {{ activeUsers[activeUsers.length-1].createdAt |date}}
+                            {{activeUsers[activeUsers.length-1] ? activeUsers[activeUsers.length-1].createdAt :''
+                            | date}}
                         </div>
                     </div>
                 </div>
@@ -107,7 +114,7 @@
                                 <span class="text-success"><i class="fa fa-long-arrow-up"></i> 55% </span> increase in
                                 today sales.
                             </p>
-                            <button class="btn btn-outline-primary" (click)="getPredictionsChart()" >Update</button>
+                            <button class="btn btn-outline-primary" (click)="getPredictionsChart()">Update</button>
                         </div>
                     </div>
                     <div class="card-footer">
@@ -152,7 +159,7 @@
                 <!-- Client Details -->
                 <div class="form-group text-center">
                     <label for="clientDetails" class="font-weight-bold" style="font-size: 1.2rem;">Subject
-                        </label>
+                    </label>
                     <textarea class="form-control text-center" id="subject" name="subject"
                         [(ngModel)]="reportData.subject" rows="3" placeholder="Enter Subject" required
                         style="font-size: 1rem;"></textarea>
@@ -188,7 +195,7 @@
             </form>
         </div>
 
-<!-- Todos -->
+        <!-- Todos -->
         <div *ngIf="role !== null && role == 'Admin'" class="row">
             <div class="col-lg-6 col-md-12">
                 <app-todo></app-todo>
@@ -215,7 +222,8 @@
                                 <tr *ngFor="let report of reports">
                                     <td class="w-50">
                                         <i class="fa-solid fa-barcode"></i>
-                                        {{report._id}}</td>
+                                        {{report._id}}
+                                    </td>
                                     <td class="w-75">
                                         <div class="d-flex align-items-center">
                                             <img src={{report.accountantId.avatar}} alt=""
@@ -227,14 +235,16 @@
                                                     {{report.accountantId._id}}
                                                 </p>
                                                 <p class="fw-bold mb-1"><i class="fa-solid fa-user"></i>
-                                                    {{report.accountantId.firstName || ""}} {{report.accountantId.lastName || ""}}
+                                                    {{report.accountantId.firstName || ""}}
+                                                    {{report.accountantId.lastName || ""}}
                                                 </p>
                                             </div>
                                         </div>
                                     </td>
                                     <td>{{report.title || ''}}</td>
                                     <td>{{report.date| date}}</td>
-                                    <td><button type="button" class="btn btn-outline-warning" (click)="viewReport(report._id)">View</button></td>
+                                    <td><button type="button" class="btn btn-outline-warning"
+                                            (click)="viewReport(report._id)">View</button></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -291,7 +301,8 @@
                                 </td>
                                 <td>
                                     <i class="fa-solid fa-barcode"></i>
-                                    {{activeUser?._id ||""}}</td>
+                                    {{activeUser?._id ||""}}
+                                </td>
                                 <td>
                                     <p class="fw-normal mb-1">{{activeUser?.role ||"" }}</p>
                                     <!-- <p class="text-muted mb-0">IT department</p> -->
@@ -306,7 +317,7 @@
                                 </td>
                                 <td>{{activeUser?.createdAt || "" | date }}</td>
                                 <td>
-                                  
+
                                     <button *ngIf="activeUser.role !== 'Admin'" type="button"
                                         class="btn btn-outline-warning btn-sm btn-rounded"
                                         (click)="toggleStatus(activeUser._id)">
@@ -354,7 +365,8 @@
                                 </td>
                                 <td>
                                     <i class="fa-solid fa-barcode"></i>
-                                    {{inactiveUser?._id || ""}}</td>
+                                    {{inactiveUser?._id || ""}}
+                                </td>
                                 <td>
                                     <p class="fw-normal mb-1">{{inactiveUser?.role || ""}}</p>
                                     <!-- <p class="text-muted mb-0">IT department</p> -->
@@ -367,7 +379,7 @@
                                         {{ inactiveUser?.active ? 'Active' : 'Inactive' }}
                                     </span>
                                 </td>
-                                <td>{{inactiveUser?.createdAt  || "" | date}}</td>
+                                <td>{{inactiveUser?.createdAt || "" | date}}</td>
                                 <td>
                                     <button type="button" class="btn btn-outline-info btn-sm btn-rounded">
                                         view
@@ -402,18 +414,22 @@
                                 <td>
                                     <p class="fw-normal mb-1">
                                         <i class="fa-solid fa-barcode"></i>
-                                        {{course._id}}</p>
+                                        {{course._id}}
+                                    </p>
                                 </td>
 
                                 <td>{{course.priceHT}}Dt</td>
                                 <td>
-                                    <button type="button" (click)="goToEditCourse(course._id)" class="btn btn-outline-success btn-sm btn-rounded">
+                                    <button type="button" (click)="goToEditCourse(course._id)"
+                                        class="btn btn-outline-success btn-sm btn-rounded">
                                         Edit
                                     </button>
-                                    <button type="button" (click)="goToCourseDetails(course._id)" class="btn btn-outline-info btn-sm btn-rounded">
+                                    <button type="button" (click)="goToCourseDetails(course._id)"
+                                        class="btn btn-outline-info btn-sm btn-rounded">
                                         Details
                                     </button>
-                                    <button type="button" (click)="deleteCourse(course._id)" class="btn btn-outline-danger btn-sm btn-rounded">
+                                    <button type="button" (click)="deleteCourse(course._id)"
+                                        class="btn btn-outline-danger btn-sm btn-rounded">
                                         Delete
                                     </button>
                                 </td>
@@ -443,10 +459,11 @@
                                 <td>
                                     <p class="fw-bold mb-1">
                                         <i class="fa-solid fa-user"></i>
-                                        {{ 
-                                            (order.customerId?.firstName && order.customerId?.lastName) 
-                                            ? (order.customerId.firstName + ' ' + order.customerId.lastName) 
-                                            : ((order.archivedUserId?.firstName || 'deleted') + ' ' + (order.archivedUserId?.lastName || 'user'))
+                                        {{
+                                        (order.customerId?.firstName && order.customerId?.lastName)
+                                        ? (order.customerId.firstName + ' ' + order.customerId.lastName)
+                                        : ((order.archivedUserId?.firstName || 'deleted') + ' ' +
+                                        (order.archivedUserId?.lastName || 'user'))
                                         }}
                                         <span *ngIf="!order.customerId ">
                                             <i class="fa-solid fa-ban"></i>
@@ -454,21 +471,21 @@
                                     </p>
                                     <p class="text-muted mb-0">
                                         <i class="fa-solid fa-envelope"></i>
-                                        {{ 
-                                            order.customerId?.email 
-                                            || order.archivedUserId?.email 
-                                            || 'deleted user' 
+                                        {{
+                                        order.customerId?.email
+                                        || order.archivedUserId?.email
+                                        || 'deleted user'
                                         }}
                                     </p>
                                     <p class="text-muted mb-0">
                                         <i class="fa-solid fa-phone"></i>
-                                        {{ 
-                                            order.customerId?.phone 
-                                            || order.archivedUserId?.phone 
-                                            || 'deleted user' 
+                                        {{
+                                        order.customerId?.phone
+                                        || order.archivedUserId?.phone
+                                        || 'deleted user'
                                         }}
                                     </p>
-                                    
+
                                 </td>
 
                                 <td>
@@ -481,10 +498,12 @@
                                     <p>{{order.total}}Dt</p>
                                 </td>
                                 <td>
-                                    <button type="button" class="btn btn-outline-info btn-sm btn-rounded" (click)="viewOrder(order.invoiceId.path)">
+                                    <button type="button" class="btn btn-outline-info btn-sm btn-rounded"
+                                        (click)="viewOrder(order.invoiceId.path)">
                                         view
                                     </button>
-                                    <button type="button" class="btn btn-outline-danger btn-sm btn-rounded" (click)="deleteOrder(order._id)">
+                                    <button type="button" class="btn btn-outline-danger btn-sm btn-rounded"
+                                        (click)="deleteOrder(order._id)">
                                         Delete
                                     </button>
                                 </td>

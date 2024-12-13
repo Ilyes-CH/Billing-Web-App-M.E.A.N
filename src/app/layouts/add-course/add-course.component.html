@@ -3,24 +3,32 @@
     <div class="mr-1 ml-1  col-lg-12">
         <i class="fa-regular fa-clipboard"></i>
         <form [formGroup]="addCourse" class=" form-group">
-            <input class="form-control text-center text-white mb-5  text-lg-center" formControlName="name" placeholder="Course Name">
-            <input class="form-control text-center text-white mb-5" formControlName="priceHT" placeholder="Price HT in Dt">
-            <input class="form-control text-center text-white mb-5" formControlName="duration" placeholder="Duration in months">
-            <input class="form-control text-center text-white mb-5" formControlName="parts" placeholder="Number Of Parts">
+            <input class="form-control text-center text-white mb-5  text-lg-center" formControlName="name"
+                placeholder="Course Name">
+            <input class="form-control  text-center text-white mb-5" formControlName="priceHT"
+                placeholder="Price HT in Dt">
+            <input class="form-control text-center text-white mb-5" formControlName="duration"
+                placeholder="Duration in months">
+            <input class="form-control text-center text-white mb-5" formControlName="parts"
+                placeholder="Number Of Parts">
 
             <div formArrayName="courses">
                 <div *ngFor="let course of courses.controls; let i = index" [formGroupName]="i">
-                    <input formControlName="courseName" class="form-control text-white text-center" placeholder="Course Name">
+                    <input formControlName="courseName" class="form-control text-white text-center"
+                        placeholder="Course Name">
 
                     <div formArrayName="modules">
                         <div *ngFor="let module of course.get('modules').controls; let j = index">
-                            <input [formControlName]="j" class="form-control text-white text-center" placeholder="Module Name">
+                            <input [formControlName]="j" class="form-control text-white text-center"
+                                placeholder="Module Name">
                         </div>
-                        <button type="button" class="btn btn-outline-info" (click)="addModuleField(i)">Add Module</button>
+                        <button type="button" class="btn btn-outline-info" (click)="addModuleField(i)">Add
+                            Module</button>
                     </div>
                 </div>
                 <button type="button" class="btn btn-outline-info" (click)="addCourseField()">Add Course</button>
-                <input type="file" class="form-control" (change)="getCourseImage($event)" #filePicker style="display: none;">
+                <input type="file" class="form-control" (change)="getCourseImage($event)" #filePicker
+                    style="display: none;">
                 <button type="submit" class="btn btn-outline-danger" (click)="filePicker.click()">Course Image</button>
             </div>
 

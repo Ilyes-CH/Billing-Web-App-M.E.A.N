@@ -5,11 +5,11 @@
                 <div class="card-body text-center">
                     <blockquote class="blockquote">
                         <i class="fa-solid fa-quote-left"></i>
-                        <p class=" text-white" style="font-family: monospace;">{{testimonial.comments}}</p>
+                        <p class=" text-white" style="font-family: monospace;">{{testimonial?.comments}}</p>
                         <i class="mb-4 fa-solid fa-quote-right"></i>
                     </blockquote>
-                    <img [src]="testimonial.commentorId.avatar" alt="User Image" class="rounded-circle mb-3" width="80" height="80">
-                    <h5 class="card-title text-white" >{{testimonial.commentorId.firstName}} {{testimonial.commentorId.lastName}}</h5>
+                    <img [src]="testimonial.commentorId ? testimonial.commentorId.avatar : ''" alt="User Image" class="rounded-circle mb-3" width="80" height="80">
+                    <h5 class="card-title text-white" >{{testimonial.commentorId?.firstName}} {{testimonial.commentorId?.lastName}}</h5>
                     <div>
                         <a class="text-primary mx-2"><i class="fab fa-facebook"></i></a>
                         <a class="text-info mx-2"><i class="fab fa-twitter"></i></a>

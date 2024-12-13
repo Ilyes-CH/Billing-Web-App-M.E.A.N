@@ -29,21 +29,28 @@ mongoose.connect("mongodb://127.0.0.1:27017/bootcamp_management").then((res) => 
 })
 
 
-//rateLimiter
-const limiter = rateLimit.rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 1000,
+// Enhanced rate limiter
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, 
+  max: 1000, 
   standardHeaders: true, 
   legacyHeaders: false, 
+  keyGenerator: (req) => req.headers['x-forwarded-for'] || req.ip, // Track requests by IP
   handler: (req, res) => {
-    console.log("Rate Limiter: Limit Exceeded")
+    console.log(`Rate Limiter: Limit exceeded for IP ${req.ip}`);
+    
+   
+    console.log(Math.ceil((req.rateLimit.resetTime - Date.now()) / 1000))
+    // Respond with a message and retry-after time
     res.status(429).json({
-      message: 'Too many requests. Please try again later.',
-      retryAfter: req.rateLimit.resetTime, 
+      message: 'Too many requests. You have been logged out. Please try again after the cooldown period.',
+      retryAfter: Math.ceil((req.rateLimit.resetTime - Date.now()) / 1000),
     });
-  }
-})
-app.use(limiter)
+  },
+});
+
+// Apply the rate limiter middleware to your app
+app.use(limiter);
 
 //cors configuration
 app.use((req, res, next) => {

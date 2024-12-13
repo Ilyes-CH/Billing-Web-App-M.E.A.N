@@ -32,7 +32,7 @@
                         <p class="text-muted">{{feedback.date || 'Cannot Get Date' | date}}</p>
                         <div class="align-items-start d-flex">
 
-                            <img src={{feedback?.commentorId.avatar}} alt="" style="width: 45px; height: 45px"
+                            <img [src]="feedback?.commentorId ? feedback.commentorId.avatar : ''" alt="" style="width: 45px; height: 45px"
                                 class="rounded-circle mr-1" />
                             <p>By {{feedback?.commentorId?.firstName || 'No user'}} {{feedback?.commentorId?.lastName || 'No user'}}</p>
                             <p></p>

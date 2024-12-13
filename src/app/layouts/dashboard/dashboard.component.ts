@@ -13,6 +13,11 @@ import { FeedbackService } from 'app/Services/feedback.service';
 import { AuthService } from 'app/Services/auth.service';
 import { PopupService } from 'app/Services/popup.service';
 
+interface Storage {
+  size: number,
+  used: number,
+  free: number
+}
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -99,7 +104,7 @@ export class DashboardComponent implements OnInit {
   public students: Array<any> = []
   public revenue: number;
   public role: string
-  public storageInfo: {}
+  public storageInfo: Storage = {size:0,free:0,used:0}
   public feedBackCount: number = 0
   public date: number = 0
   public gainUpdatedAt: number = 0
@@ -115,17 +120,14 @@ export class DashboardComponent implements OnInit {
   onSubmit() {
     const id = this.authservice.getId()
     this.reportData['accountantId'] = id
-    console.log(this.reportData)
     this.reportService.addNewReport(this.reportData).subscribe({
       next: (res) => {
-        console.log(res)
         if (res.status == 201) {
           this.onClear()
           this.popup.showNotification('bottom', 'right', 'success', 'Report was submitted Successfully')
         }
       }, error: (err) => {
         this.popup.showNotification('bottom', 'right', 'danger', 'Error Submitting the report')
-        console.log(err)
 
       }
     })
@@ -145,7 +147,6 @@ export class DashboardComponent implements OnInit {
         }
       }, error: (err) => {
         if (err.status != 200) {
-          console.log(err)
           this.popup.showNotification('bottom', 'right', 'danger', 'Error Deleting the order')
 
         }
@@ -246,14 +247,14 @@ export class DashboardComponent implements OnInit {
 
 
     this.storage.getStorage().subscribe((res) => {
-      console.log(res)
-      this.storageInfo = res
+      this.storageInfo.free = res.body['free']
+      this.storageInfo.used = res.body['used']
+      this.storageInfo.size = res.body['size']
     })
 
     this.feedbackService.getFeedbackCount().subscribe({
       next: (res) => {
         if (res.status == 200) {
-          console.log(res)
           this.feedBackCount = res.body['data']
           this.date = res.body['updatedAt']
         }
@@ -268,7 +269,6 @@ export class DashboardComponent implements OnInit {
     this.reportService.getLatestReports().subscribe({
       next: (res) => {
         if (res.status === 200) {
-          console.log('Reports: ', res.body['data'])
           this.reports = res.body['data']
         }
       }, error: (err) => {
@@ -297,16 +297,13 @@ export class DashboardComponent implements OnInit {
       if (res.status == 200) {
         this.activeUsers = res.body['data']
         this.students = this.activeUsers.filter((user) => user.role == 'Learner')
-        console.log(this.activeUsers[0])
       } else if (res.status == 404) {
 
       }
     })
     this.userService.getDeletedUsers().subscribe((res) => {
-      console.log(res)
       if (res.status == 200) {
         this.inactiveUsers = res.body['data']
-        console.log(this.inactiveUsers)
       } else if (res.status == 404) {
 
       }
@@ -314,17 +311,14 @@ export class DashboardComponent implements OnInit {
     this.courseService.getCourses().subscribe((res) => {
       if (res.status == 200) {
         this.courses = res.body['data']
-        console.log(this.courses)
       } else if (res.status == 404) {
 
       }
     })
 
     this.orderService.getAllOrders().subscribe((res) => {
-      console.log(res)
       if (res.status == 200) {
         this.orders = res.body['data']
-        console.log(this.orders[0].serviceIds[0].name)
       } else if (res.status == 404) {
 
       }
@@ -335,12 +329,10 @@ export class DashboardComponent implements OnInit {
 
   toggleStatus(id: string) {
     this.userService.toggleStatus(id).subscribe((res) => {
-      console.log(res)
       if (res.ok) {
         this.userService.getUsers().subscribe((res) => {
           if (res.status == 200) {
             this.activeUsers = res.body['data']
-            console.log(this.activeUsers)
           } else if (res.status == 404) {
 
           }
@@ -351,12 +343,10 @@ export class DashboardComponent implements OnInit {
 
   deleteUser(id: string) {
     this.userService.deleteUser(id).subscribe((res) => {
-      console.log(res)
       if (res.ok) {
         this.userService.getUsers().subscribe((res) => {
           if (res.status == 200) {
             this.activeUsers = res.body['data']
-            console.log(this.activeUsers)
           } else if (res.status == 404) {
 
           }
@@ -368,7 +358,6 @@ export class DashboardComponent implements OnInit {
   getGainsChart() {
     this.gainService.getGains().subscribe({
       next: (res) => {
-        console.log(res.body["data"])
         let gains = res.body['data'].map(g => g = g.total)
         this.gains = res.body['data'].map((gain) => ({
           total: Math.floor(gain.total) / 1000,
@@ -376,7 +365,6 @@ export class DashboardComponent implements OnInit {
         }))
         const labels = this.gains.map((gain) => gain.date);
         const series = [this.gains.map((gain) => gain.total)];
-        console.log(labels)
 
         this.dailySalesChart.update({
           labels: labels,
@@ -384,9 +372,7 @@ export class DashboardComponent implements OnInit {
         });
 
         this.gainUpdatedAt = res.body['data'][res.body['data'].length - 1]['date']
-        console.log(this.gainUpdatedAt)
         this.revenue = this.sum(gains)
-        console.log("gains: ", this.gains)
       }, error: (err) => {
 
       }
@@ -413,8 +399,7 @@ export class DashboardComponent implements OnInit {
           const formattedLabels = labels.map((label) =>
             label.toLocaleDateString('en-US', { month: 'short' })
           );
-          console.log("predictions", this.predictions)
-          console.log('dates', formattedLabels)
+
 
           // Make sure you're updating the chart data correctly
           this.dataCompletedTasksChart.labels = formattedLabels;
@@ -425,7 +410,6 @@ export class DashboardComponent implements OnInit {
         }
       },
       error: (err) => {
-        console.log(err);
       }
     });
 

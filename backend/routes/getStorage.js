@@ -1,11 +1,20 @@
 const express = require('express');
 const fs = require('fs');
 const checkDiskSpace = require('check-disk-space')
-const path = require('path');
+const jwt = require("jsonwebtoken")
+const authenticateToken = require('../middlewares/authenticateToken')
 
 const router = express.Router()
 const rootPath = '/';
-router.get('/disk-info', async (req, res) => {
+router.get('/disk-info', authenticateToken ,async (req, res) => {
+  const authHeader = req.headers['Authorization'] || req.headers["authorization"]
+  const token = authHeader && authHeader.split(' ')[1]
+  console.log("verify token:", token)
+  const decoded = jwt.decode(token)
+  if (decoded.role && decoded.role !== "Admin" && decoded.role !== "Accountant") {
+    res.status(403).json({ message: `Unauthorized` })
+
+  } else {
     try {
         const storage = await checkDiskSpace(rootPath);
         res.json({
@@ -18,5 +27,6 @@ router.get('/disk-info', async (req, res) => {
         console.error('Error fetching storage details:', error);
         res.status(500).send('Failed to get storage details');
       }
+    }
 })
 module.exports = router;

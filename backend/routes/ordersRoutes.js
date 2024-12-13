@@ -7,22 +7,33 @@ const express = require('express')
 const Order = require('../models/order')
 const Invoice = require('../models/invoice')
 const Notice = require('../models/notice')
+const jwt = require("jsonwebtoken")
 const verifyObjectId = require('../helpers/verifyObjectId')
 const createInvoiceFile = require('../helpers/createInvoiceFile')
 const Gain = require('../models/gains')
 const findMany = require('../helpers/findManyServices')
+const authenticateToken = require('../middlewares/authenticateToken')
+require('dotenv').config({path:'../main/.env'})
 const path = require('path')
 // const uuid = require('uuid');
 const router = express.Router();
-
+const PORT = process.env.PORT
 
 
 /**
   *@generate Invoice before order
  */
-router.post('/addOrder', async (req, res) => {
+router.post('/addOrder',authenticateToken, async (req, res) => {
   console.log("\x1b[35m*******************Add Order Route\x1b[0m");
+ 
+  const authHeader = req.headers['Authorization'] || req.headers["authorization"]
+  const token = authHeader && authHeader.split(' ')[1]
+  console.log("verify token:", token)
+  const decoded = jwt.decode(token)
+  if (decoded.role && decoded.role !== "Learner") {
+    res.status(403).json({ message: `Unauthorized` })
 
+  } else {
   if (!req.body || Object.keys(req.body).length === 0) {
     return res.status(400).json({ message: 'Bad Request' });
   }
@@ -65,6 +76,7 @@ router.post('/addOrder', async (req, res) => {
         totalAfterTax,
       };
     });
+
     const invoiceData = {
       firstName: customerId.firstName,
       lastName: customerId.lastName,
@@ -90,7 +102,7 @@ router.post('/addOrder', async (req, res) => {
       details: order.details,
       customerId,
       orderId: order._id,
-      path: `http://localhost:3000/pdfs/${path.basename(filePath)}`,
+      path: `${req.protocol}://${req.get}:${PORT}/pdfs/${path.basename(filePath)}`,
     }).save();
 
     order.invoiceId = invoice._id;
@@ -102,14 +114,23 @@ router.post('/addOrder', async (req, res) => {
     console.error("\x1b[31mError placing the order:\x1b[0m", error);
     res.status(500).json({ message: 'Error placing the order' });
   }
+}
 });
 
 
 
 //send all Orders to Accountant
-router.get('/', (req, res) => {
+router.get('/',authenticateToken ,(req, res) => {
   console.log("\x1b[35m*******************Get All Orders Route\x1b[0m");
+ 
+  const authHeader = req.headers['Authorization'] || req.headers["authorization"]
+  const token = authHeader && authHeader.split(' ')[1]
+  console.log("verify token:", token)
+  const decoded = jwt.decode(token)
+  if (decoded.role && decoded.role !== "Admin") {
+    res.status(403).json({ message: `Unauthorized` })
 
+  } else {
   Order.find().populate(['serviceIds', 'customerId', 'invoiceId','archivedUserId']).then((docs) => {
 
     res.status(docs.length > 0 ? 200 : 404).json({ message: docs.length > 0 ? 'Found All Orders' : 'No Orders found', data: docs });
@@ -120,10 +141,11 @@ router.get('/', (req, res) => {
     res.status(500).json({ message: 'Internal Server Error' });
 
   })
+}
 });
 
 //delete order along with its invoice
-router.delete('/order/:id', (req, res) => {
+router.delete('/order/:id',authenticateToken, (req, res) => {
   console.log("\x1b[35m*******************Delete Order By Id Route\x1b[0m");
 
   if (req.params.id) {
@@ -167,7 +189,7 @@ router.delete('/order/:id', (req, res) => {
 });
 
 //get all orders for each customer
-router.get('/:customerId', (req, res) => {
+router.get('/:customerId', authenticateToken,(req, res) => {
   console.log("\x1b[35m*******************Get Orders By Customer Id Route\x1b[0m");
   const customerId = req.params.customerId
   console.log(customerId)
@@ -204,7 +226,7 @@ router.get('/:customerId', (req, res) => {
 });
 
 //Get order By its Id
-router.get('/order/:id', (req, res) => {
+router.get('/order/:id', authenticateToken,(req, res) => {
   console.log("\x1b[35m*******************Get Order By Id Route\x1b[0m");
   if (req.params.id) {
     console.log("order Id:", req.params.id);
@@ -237,6 +259,3 @@ router.get('/order/:id', (req, res) => {
 module.exports = router;
 
 
-/**
- * @IMPORTANT To be revised I was out dizzy when coding this ATM
- */
