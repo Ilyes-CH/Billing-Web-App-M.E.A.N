@@ -59,7 +59,7 @@ export class SidebarComponent implements OnInit {
   logout(){
     sessionStorage.removeItem('accessToken')
     localStorage.removeItem('refreshToken')
-    localStorage.removeItem('noticeChoices')
+    localStorage.removeItem('noticeChoices')  
     localStorage.removeItem('cart')
     sessionStorage.removeItem('noticeCourses')
     this.router.navigate(['login'])

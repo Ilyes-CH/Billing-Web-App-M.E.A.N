@@ -27,9 +27,9 @@ export class LoginComponent implements OnInit {
     this.userService.login(this.loginForm.value).subscribe({
       next: (res) => {
         if (res.ok) {
-          localStorage.setItem('refreshToken', res.body['refreshToken']);
-          sessionStorage.setItem('accessToken', res.body['accessToken']);
           if (res.body['accessToken']) {
+            localStorage.setItem('refreshToken', res.body['refreshToken']);
+            sessionStorage.setItem('accessToken', res.body['accessToken']);
             const user: any = jwtDecode(res.body['accessToken']);
             console.log(user['role']);
             if (user['role'] === 'Accountant') {
@@ -41,6 +41,7 @@ export class LoginComponent implements OnInit {
               localStorage.setItem('accountantRole', JSON.stringify(true));
               
               this.router.navigate(['dashboard']);
+
             } else if (user['role'] === 'Admin') {
               this.auth.adminRole = true;
               this.auth.accountantRole = false;

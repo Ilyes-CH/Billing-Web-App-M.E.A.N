@@ -71,39 +71,37 @@
                     </div>
                 </div>
             </div>
-            <div class="tab-pane " id="profile">
+            <div class="tab-pane" id="messages">
                 <table class="table">
                     <tbody>
                         <tr *ngFor="let todo of todos">
-                            <div  *ngIf="todo.type === 'bugs'">
-
-                                <td class="td-actions text-right w-100">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <!-- Checkbox -->
-                                        <div class="form-check">
-                                            <label class="form-check-label">
-                                                <input class="form-check-input" type="checkbox" value=""
-                                                    (click)="markDone(todo.id)">
-                                                <span class="form-check-sign">
-                                                    <span class="check"></span>
-                                                </span>
-                                            </label>
-                                        </div>
-    
-                                        <!-- Task Description -->
-                                        <p class="mb-0 flex-grow-1">{{todo.task}}</p>
-    
-                                        <!-- Remove Button -->
-                                        <button mat-raised-button type="button" matTooltip="Remove"
-                                            [matTooltipPosition]="'above'" (click)="deleteTask(todo.id)"
-                                            class="btn btn-danger btn-link btn-sm btn-just-icon">
-                                            <i class="material-icons">close</i>
-                                        </button>
+                            <div *ngIf="todo.type == 'Bugs'">
+                            <td class="td-actions text-right w-100">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <!-- Checkbox -->
+                                    <div class="form-check">
+                                        <label class="form-check-label">
+                                            <input class="form-check-input" type="checkbox" [checked]="todo.isDone"
+                                                (click)="markDone(todo.id)">
+                                            <span class="form-check-sign">
+                                                <span class="check"></span>
+                                            </span>
+                                        </label>
                                     </div>
-                                </td>
-                            </div>>
-                        </tr>
 
+                                    <!-- Task Description -->
+                                    <p class="mb-0 flex-grow-1">{{todo.task}}</p>
+
+                                    <!-- Remove Button -->
+                                    <button mat-raised-button type="button" matTooltip="Remove"
+                                        [matTooltipPosition]="'above'" (click)="deleteTask(todo.id)"
+                                        class="btn btn-danger btn-link btn-sm btn-just-icon">
+                                        <i class="material-icons">close</i>
+                                    </button>
+                                </div>
+                            </td>
+                            </div>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -111,13 +109,13 @@
                 <table class="table">
                     <tbody>
                         <tr *ngFor="let todo of todos">
-                            <div *ngIf="todo.type === 'website'">
+                            <div *ngIf="todo.type === 'Website'">
                             <td class="td-actions text-right w-100">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <!-- Checkbox -->
                                     <div class="form-check">
                                         <label class="form-check-label">
-                                            <input class="form-check-input" type="checkbox" value=""
+                                            <input class="form-check-input" type="checkbox" [checked]="todo.isDone"
                                                 (click)="markDone(todo.id)">
                                             <span class="form-check-sign">
                                                 <span class="check"></span>
@@ -145,7 +143,7 @@
                 <table class="table">
                     <tbody>
                         <tr *ngFor="let todo of todos">
-                            <div  *ngIf="todo.type === 'server'">
+                            <div  *ngIf="todo.type == 'Server'">
                                 <td class="td-actions text-right w-100">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <!-- Checkbox -->

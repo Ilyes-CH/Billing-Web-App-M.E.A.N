@@ -7,7 +7,6 @@ import { TypographyComponent } from '../typography/typography.component';
 import { IconsComponent } from '../icons/icons.component';
 import { MapsComponent } from '../maps/maps.component';
 import { NotificationsComponent } from '../notifications/notifications.component';
-import { UpgradeComponent } from '../../upgrade/upgrade.component';
 import { HomeComponent } from 'app/layouts/home/home.component';
 import { ResetPasswordComponent } from '../reset-password/reset-password.component';
 import { FeedbackComponent } from '../feedback/feedback.component';
@@ -42,7 +41,6 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'icons', component: IconsComponent, canActivate: [AuthGuardGuard] },
     { path: 'maps', component: MapsComponent, canActivate: [AuthGuardGuard] },
     { path: 'notifications', component: NotificationsComponent, canActivate: [AuthGuardGuard] },
-    { path: 'upgrade', component: UpgradeComponent }, // No auth guard here
     { path: 'reset-password/verify', component: ResetPasswordComponent }, // No auth guard here
     { path: 'password-reset/:token', component: PasswordResetHiddenComponent }, // No auth guard here
     { path: 'feedback', component: FeedbackComponent }, // No auth guard here

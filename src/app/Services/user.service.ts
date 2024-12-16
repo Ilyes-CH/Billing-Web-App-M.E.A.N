@@ -1,14 +1,26 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
-  constructor(private http: HttpClient) { }
-  private  token = sessionStorage.getItem('accessToken') || ""
-  private httpHeaders = new HttpHeaders().set("Authorization",`Bearer ${this.token}`)
+  constructor(private auth:AuthService,private http: HttpClient) { }
+  
+  
+  // private  token = sessionStorage.getItem('accessToken') || ""
+  private getToken():any{
+    if(this.auth.isUserLoggedIn){
+
+      return sessionStorage.getItem('accessToken')
+    }
+  }
+  private tokenSubject = new BehaviorSubject<any>(this.getToken())
+  token$ = this.tokenSubject.asObservable()
+  private httpHeaders = new HttpHeaders().set("Authorization",`Bearer ${this.tokenSubject.getValue()}`)
   private url: string = "http://127.0.0.1:3000/api";
 
   login(credentials: any) {
@@ -47,8 +59,7 @@ export class UserService {
 
   }
   getDeletedUsers() {
-    return this.http.get(`${this.url}/users/archivedUsers`, { observe: 'response', headers:this.httpHeaders })
-
+    return this.http.get(`${this.url}/users/archivedUsers`, { headers:this.httpHeaders , observe: 'response'})
   }
   deleteUser(userId: string) {
     return this.http.delete(`${this.url}/users/${userId}`, { observe: 'response' , headers:this.httpHeaders})

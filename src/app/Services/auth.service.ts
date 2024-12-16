@@ -15,6 +15,7 @@ export class AuthService {
   private headers = new HttpHeaders().set('Authorization', `Bearer ${this.accessToken}`)
   public isAdmin : boolean = false
   public isAccountant : boolean = false
+  
   //dynamically get notifications from LS
   private notificationsSubject = new BehaviorSubject<any[]>(this.getNotificationsFromLocalStorage());
   notifications$ = this.notificationsSubject.asObservable();

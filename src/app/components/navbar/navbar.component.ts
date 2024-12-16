@@ -36,7 +36,7 @@ export class NavbarComponent implements OnInit {
         })
         const token = sessionStorage.getItem('accessToken')
         if(token){
-            //logout logic
+            
             const decoded = jwtDecode(token)
             if(decoded['role'] =="Accountant"){
                 this.isAccountant = true

@@ -162,7 +162,7 @@ router.get('/',authenticateToken ,(req, res) => {
 
   const authHeader = req.headers['Authorization'] || req.headers["authorization"]
   const token = authHeader && authHeader.split(' ')[1]
-  console.log("verify token:", token)
+  
   const decoded = jwt.decode(token)
   if (decoded.role && decoded.role !== "Admin") {
     res.status(403).json({ message: `Unauthorized` })
@@ -191,9 +191,9 @@ router.get('/archivedUsers', authenticateToken,(req, res) => {
 
   const authHeader = req.headers['Authorization'] || req.headers["authorization"]
   const token = authHeader && authHeader.split(' ')[1]
-  console.log("verify token:", token)
   const decoded = jwt.decode(token)
   if (decoded.role && decoded.role !== "Admin") {
+    console.log("UNAUTHORIZED ACCESS FROM ARCHIVE :",decoded)
     res.status(403).json({ message: `Unauthorized` })
 
   } else {
@@ -220,7 +220,7 @@ router.delete('/', authenticateToken,(req, res) => {
   console.log("\x1b[35m*******************Delete Users Route\x1b[0m")
   const authHeader = req.headers['Authorization'] || req.headers["authorization"]
   const token = authHeader && authHeader.split(' ')[1]
-  console.log("verify token:", token)
+  
   const decoded = jwt.decode(token)
   if (decoded.role && decoded.role !== "Admin") {
     res.status(403).json({ message: `Unauthorized` })
@@ -244,7 +244,7 @@ router.get('/:id', authenticateToken,(req, res) => {
   console.log("\x1b[35m*******************GET User By Id Route\x1b[0m")
   const authHeader = req.headers['Authorization'] || req.headers["authorization"]
   const token = authHeader && authHeader.split(' ')[1]
-  console.log("verify token:", token)
+  
   const decoded = jwt.decode(token)
   if (decoded.role && decoded.role !== "Admin") {
     res.status(403).json({ message: `Unauthorized` })
@@ -316,7 +316,7 @@ router.delete('/:id', authenticateToken,(req, res) => {
   console.log("\x1b[35m******************* Delete User By Id Route *******************\x1b[0m");
   const authHeader = req.headers['Authorization'] || req.headers["authorization"]
   const token = authHeader && authHeader.split(' ')[1]
-  console.log("verify token:", token)
+  
   const decoded = jwt.decode(token)
   if (decoded.role && decoded.role !== "Admin") {
     res.status(403).json({ message: `Unauthorized` })
@@ -436,7 +436,7 @@ router.get('/updateStatus/:id', authenticateToken,(req, res) => {
   console.log("\x1b[35m*******************Validate User By Id Route\x1b[0m")
   const authHeader = req.headers['Authorization'] || req.headers["authorization"]
   const token = authHeader && authHeader.split(' ')[1]
-  console.log("verify token:", token)
+  
   const decoded = jwt.decode(token)
   if (decoded.role && decoded.role !== "Admin") {
     res.status(403).json({ message: `Unauthorized` })

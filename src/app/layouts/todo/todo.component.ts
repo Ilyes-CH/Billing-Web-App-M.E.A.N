@@ -25,13 +25,11 @@ export class TodoComponent implements OnInit {
 
   ngOnInit(): void {
     this.todos = JSON.parse(localStorage.getItem('todos') || '[]')
-    
+    console.log(this.todos)
   }
 
   addTask() {
     this.todos = JSON.parse(localStorage.getItem('todos') || '[]')
-    
-
     this.todos.push(this.todo)
     localStorage.setItem('todos', JSON.stringify(this.todos))
     this.todo = { id: Date.now(), date: Date.now(), task: '', type: '', isDone: false }
@@ -40,9 +38,6 @@ export class TodoComponent implements OnInit {
 
   deleteTask(id: number) {
     this.todos = JSON.parse(localStorage.getItem('todos') || '[]')
-
-    
-
     const index = this.todos.findIndex(todo => todo.id == id)
     this.todos.splice(index)
     localStorage.setItem('todos', JSON.stringify(this.todos))
