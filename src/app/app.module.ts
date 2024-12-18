@@ -1,7 +1,7 @@
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule, PipeTransform } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { AppRoutingModule } from './app.routing';
 import { ComponentsModule } from './components/components.module';
@@ -18,7 +18,7 @@ import { ReportsComponent } from './layouts/reports/reports.component';
 import { ReportDetailsComponent } from './layouts/report-details/report-details.component';
 import { FeedbacksComponent } from './layouts/feedbacks/feedbacks.component';
 import { EditCourseComponent } from './layouts/edit-course/edit-course.component';
-
+import { RequestCacheInterceptor } from './Services/request-cache.interceptor';
 
 @NgModule({
   imports: [
@@ -50,7 +50,13 @@ import { EditCourseComponent } from './layouts/edit-course/edit-course.component
     
 
   ],
-  providers: [],
+  providers: [
+    {
+      provide:HTTP_INTERCEPTORS,
+      useClass:RequestCacheInterceptor,
+      multi:true,
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
