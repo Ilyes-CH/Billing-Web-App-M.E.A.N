@@ -9,6 +9,9 @@ const FeedBack = require('../models/feedback')
 const isObjectId = require('../helpers/verifyObjectId')
 const authenticateToken = require('../middlewares/authenticateToken')
 const jwt = require("jsonwebtoken")
+const axios = require('axios')
+require('dotenv').config({ path: '../main/.env' })
+const qs = require('qs')
 
 const router = express.Router()
 
@@ -92,11 +95,31 @@ router.post('/newFeedBack',authenticateToken, async (req, res) => {
     const token = authHeader && authHeader.split(' ')[1]
     console.log("verify token:", token)
     const decoded = jwt.decode(token)
-    if (decoded.role && decoded.role !== "Admin") {
+    if (decoded.role && decoded.role !== "Admin" && decoded.role !== "Accountant" && decoded.role !== "Learner") {
       res.status(403).json({ message: `Unauthorized` })
   
     } else {
-    const newFeedBack = req.body
+
+    const {token,...newFeedBack} = req.body
+    console.log(req.body)
+    if(!token) res.status(400).json({message:"Malformed request"})
+    const recaptchaURL = `https://www.google.com/recaptcha/api/siteverify`;
+    const recaptchaSecretKey = process.env.SECRET_KEY
+    const response = await axios.post(
+        recaptchaURL,
+        qs.stringify({
+          secret: recaptchaSecretKey,
+          response: token,
+        }),
+        {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        }
+      );
+
+      console.log('Recaptcha verification response:', response.data);
+      if (response.data.success) {
     console.log(newFeedBack)
     if (!newFeedBack) {
         return res.status(400).json({ message: 'Bad Request' })
@@ -114,7 +137,10 @@ router.post('/newFeedBack',authenticateToken, async (req, res) => {
         console.log(`\x1b[31mError In Post Feedback: \x1b[0m ${error}`);
         res.status(500).json({ error: "Internal Server Error" });
     }
+    }else{
+        res.status(400).json({message:'Bad Request'})
     }
+}
 })
 
 

@@ -15,7 +15,7 @@ export class LoginComponent implements OnInit {
   constructor(private recaptchaV3Service: ReCaptchaV3Service, private formBuilder: FormBuilder, private userService: UserService, private router: Router, private auth: AuthService) { }
   loginForm !: FormGroup;
   public error!: string;
-  public captchaToken: string | undefined
+
   ngOnInit(): void {
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required]],
@@ -27,12 +27,11 @@ export class LoginComponent implements OnInit {
   public login() {
     this.recaptchaV3Service.execute('submit').subscribe({
       next: (token: string) => {
-        this.captchaToken = token;
 
         // Send form data and reCAPTCHA token to the backend
         const loginData = {
           ...this.loginForm.value,
-          token: token, // Include the token
+          token: token, 
         };
 
         this.userService.login(loginData).subscribe({
