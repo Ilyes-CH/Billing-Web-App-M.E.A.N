@@ -1,7 +1,7 @@
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgModule, PipeTransform } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { AppRoutingModule } from './app.routing';
 import { ComponentsModule } from './components/components.module';
@@ -19,7 +19,8 @@ import { ReportDetailsComponent } from './layouts/report-details/report-details.
 import { FeedbacksComponent } from './layouts/feedbacks/feedbacks.component';
 import { EditCourseComponent } from './layouts/edit-course/edit-course.component';
 import { RequestCacheInterceptor } from './Services/request-cache.interceptor';
-
+import { RecaptchaV3Module, RECAPTCHA_V3_SITE_KEY} from 'ng-recaptcha';
+import { environment } from 'environments/environment';
 @NgModule({
   imports: [
     BrowserAnimationsModule,
@@ -29,7 +30,7 @@ import { RequestCacheInterceptor } from './Services/request-cache.interceptor';
     ComponentsModule,
     RouterModule,
     AppRoutingModule,
-    
+    RecaptchaV3Module, 
   ],
   declarations: [
     AppComponent,
@@ -45,18 +46,18 @@ import { RequestCacheInterceptor } from './Services/request-cache.interceptor';
     ReportDetailsComponent,
     FeedbacksComponent,
     EditCourseComponent,
-    
-
-    
-
   ],
   providers: [
     {
-      provide:HTTP_INTERCEPTORS,
-      useClass:RequestCacheInterceptor,
-      multi:true,
-    }
+      provide: HTTP_INTERCEPTORS,
+      useClass: RequestCacheInterceptor,
+      multi: true,
+    },
+    {
+      provide: RECAPTCHA_V3_SITE_KEY,
+      useValue: environment.recaptcha.siteKey, 
+    },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

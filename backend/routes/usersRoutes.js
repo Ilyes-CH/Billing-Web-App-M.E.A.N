@@ -15,7 +15,10 @@ const isValidObjectId = require('../helpers/verifyObjectId')
 const authenticateToken = require('../middlewares/authenticateToken')
 const [generateAccessToken, generateRefreshToken] = require('../helpers/generateTokens');
 require('dotenv').config({ path: '../main/.env' })
-
+const jwt = require("jsonwebtoken")
+const axios = require('axios')
+const qs = require('qs');
+const fetch = require('node-fetch')
 //load users model
 const User = require('../models/user');
 const OTP = require('../models/otpModel')
@@ -25,7 +28,6 @@ const Gain = require('../models/gains')
 const Order = require('../models/order')
 const Feedback = require('../models/feedback');
 const Invoice = require('../models/invoice')
-const jwt = require("jsonwebtoken")
 
 const PORT = process.env.PORT
 
@@ -35,50 +37,74 @@ router.post("/auth/login", async (req, res) => {
   console.log("\x1b[35m*******************Login Route\x1b[0m");
 
   try {
-    const { email, password } = req.body;
-    console.log('request body', req.body);
+    const recaptchaURL = `https://www.google.com/recaptcha/api/siteverify`;
+    const recaptchaSecretKey = process.env.SECRET_KEY
+    const { email, password, token } = req.body;
+    try{
+      const response = await axios.post(
+        recaptchaURL,
+        qs.stringify({
+          secret: recaptchaSecretKey,
+          response: token,
+        }),
+        {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        }
+      );
 
-    const user = await User.findOne({ email });
-    console.log('found user', user)
-    if (!user) {
-      return res.status(403).json({ message: "Email or Password is incorrect" });
+      console.log('Recaptcha verification response:', response.data);
+      if (response.data.success) {
+        const user = await User.findOne({ email });
+        console.log('found user', user)
+        if (!user) {
+          return res.status(403).json({ message: "Email or Password is incorrect" });
+        }
+  
+        console.log("Password from request:", password);
+        console.log("Hashed password from DB:", user.password);
+  
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+          return res.status(403).json({ message: "Email or Password is incorrect" });
+        }
+        if (!user.status) {
+          return res.status(401).json({ message: "Account not Valid by Admin" });
+  
+        }
+        const userToCache = {
+          id: user._id,
+          role: user.role,
+          status: user.status,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          avatar: user.avatar,
+        };
+  
+        const accessToken = generateAccessToken(userToCache);
+        const refreshToken = generateRefreshToken({ id: user._id });
+        console.log(accessToken, refreshToken);
+  
+        // Save the refresh token to the database
+        user.refreshToken = refreshToken;
+        const updatedUser = await user.save();
+  
+        console.log(updatedUser);
+        res.status(200).json({ accessToken, refreshToken, message: "Success" });
+  
+      } else {
+        res.status(400).send({ success: false, errors: response.data['error-codes'] });
+      }
+  
+    } catch (error) {
+      console.log(`\x1b[31mError In Recaptcha: \x1b[0m ${error}`);
+      res.status(500).json({ error: "Internal Server Error" });
     }
-
-    console.log("Password from request:", password);
-    console.log("Hashed password from DB:", user.password);
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(403).json({ message: "Email or Password is incorrect" });
+    }catch(error){
+      console.log(`\x1b[31mError In Login: \x1b[0m ${error}`);
+      res.status(500).json({ error: "Internal Server Error" });
     }
-    if (!user.status) {
-      return res.status(401).json({ message: "Account not Valid by Admin" });
-
-    }
-    const userToCache = {
-      id: user._id,
-      role: user.role,
-      status: user.status,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      avatar: user.avatar,
-    };
-
-    const accessToken = generateAccessToken(userToCache);
-    const refreshToken = generateRefreshToken({ id: user._id });
-    console.log(accessToken, refreshToken);
-
-    // Save the refresh token to the database
-    user.refreshToken = refreshToken;
-    const updatedUser = await user.save();
-
-    console.log(updatedUser);
-    res.status(200).json({ accessToken, refreshToken, message: "Success" });
-
-  } catch (error) {
-    console.log(`\x1b[31mError In Login: \x1b[0m ${error}`);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
 });
 
 
@@ -158,139 +184,139 @@ router.post('/auth/signup', multer({ storage: multerConfig }).single('img'), che
 
 //Actions on All users
 
-router.get('/',authenticateToken ,(req, res) => {
+router.get('/', authenticateToken, (req, res) => {
 
   const authHeader = req.headers['Authorization'] || req.headers["authorization"]
   const token = authHeader && authHeader.split(' ')[1]
-  
+
   const decoded = jwt.decode(token)
   if (decoded.role && decoded.role !== "Admin") {
     res.status(403).json({ message: `Unauthorized` })
 
   } else {
-  User.find().then((docs) => {
+    User.find().then((docs) => {
 
-    console.log("\x1b[35m*******************GET Users Route\x1b[0m")
-    if (docs.length > 0) {
-      console.log(docs)
-      res.status(200).json({ data: docs })
-    } else {
-      res.status(404).json({ message: "users not found" })
-    }
+      console.log("\x1b[35m*******************GET Users Route\x1b[0m")
+      if (docs.length > 0) {
+        console.log(docs)
+        res.status(200).json({ data: docs })
+      } else {
+        res.status(404).json({ message: "users not found" })
+      }
 
-  }).catch((e) => {
-    console.log(`\x1b[31mError in getting users:\x1b[0m ${e}`)
+    }).catch((e) => {
+      console.log(`\x1b[31mError in getting users:\x1b[0m ${e}`)
 
-    res.status(500).json({ message: 'Internal Server Error' })
-  })
-}
+      res.status(500).json({ message: 'Internal Server Error' })
+    })
+  }
 })
 
-router.get('/archivedUsers', authenticateToken,(req, res) => {
+router.get('/archivedUsers', authenticateToken, (req, res) => {
   console.log("\x1b[35m*******************Get All Archived Users Route\x1b[0m");
 
   const authHeader = req.headers['Authorization'] || req.headers["authorization"]
   const token = authHeader && authHeader.split(' ')[1]
   const decoded = jwt.decode(token)
   if (decoded.role && decoded.role !== "Admin") {
-    console.log("UNAUTHORIZED ACCESS FROM ARCHIVE :",decoded)
+    console.log("UNAUTHORIZED ACCESS FROM ARCHIVE :", decoded)
     res.status(403).json({ message: `Unauthorized` })
 
   } else {
-  UserArchive.find().then((docs) => {
+    UserArchive.find().then((docs) => {
 
-    console.log("\x1b[35m*******************GET Deleted Users Route\x1b[0m")
-    if (docs.length > 0) {
-      console.log(docs)
-      res.status(200).json({ data: docs })
-    } else {
-      res.status(404).json({ message: "deleted users not found" })
-    }
+      console.log("\x1b[35m*******************GET Deleted Users Route\x1b[0m")
+      if (docs.length > 0) {
+        console.log(docs)
+        res.status(200).json({ data: docs })
+      } else {
+        res.status(404).json({ message: "deleted users not found" })
+      }
 
-  }).catch((e) => {
-    console.log(`\x1b[31mError in getting deleted users:\x1b[0m ${e}`)
+    }).catch((e) => {
+      console.log(`\x1b[31mError in getting deleted users:\x1b[0m ${e}`)
 
-    res.status(500).json({ message: 'Internal Server Error' })
-  })
-}
+      res.status(500).json({ message: 'Internal Server Error' })
+    })
+  }
 })
 
 
-router.delete('/', authenticateToken,(req, res) => {
+router.delete('/', authenticateToken, (req, res) => {
   console.log("\x1b[35m*******************Delete Users Route\x1b[0m")
   const authHeader = req.headers['Authorization'] || req.headers["authorization"]
   const token = authHeader && authHeader.split(' ')[1]
-  
+
   const decoded = jwt.decode(token)
   if (decoded.role && decoded.role !== "Admin") {
     res.status(403).json({ message: `Unauthorized` })
 
   } else {
-  User.deleteMany().then((response) => {
+    User.deleteMany().then((response) => {
 
-    response.deletedCount > 0 ? res.status(200).json({ message: 'Users are deleted' }) : res.status(304).json({ message: 'No Users were deleted' })
+      response.deletedCount > 0 ? res.status(200).json({ message: 'Users are deleted' }) : res.status(304).json({ message: 'No Users were deleted' })
 
-  }).catch((e) => {
-    console.log(`\x1b[31mError in deleting users:\x1b[0m ${e}`)
+    }).catch((e) => {
+      console.log(`\x1b[31mError in deleting users:\x1b[0m ${e}`)
 
-    res.status(500).json({ message: 'Internal Server Error' })
-  })
+      res.status(500).json({ message: 'Internal Server Error' })
+    })
   }
 })
 
 //Actions on Single user
 
-router.get('/:id', authenticateToken,(req, res) => {
+router.get('/:id', authenticateToken, (req, res) => {
   console.log("\x1b[35m*******************GET User By Id Route\x1b[0m")
   const authHeader = req.headers['Authorization'] || req.headers["authorization"]
   const token = authHeader && authHeader.split(' ')[1]
-  
+
   const decoded = jwt.decode(token)
   if (decoded.role && decoded.role !== "Admin") {
     res.status(403).json({ message: `Unauthorized` })
 
   } else {
-  const id = req.params.id
-  if (isValidObjectId(id)) {
+    const id = req.params.id
+    if (isValidObjectId(id)) {
 
-    User.findById(id).then((user) => {
+      User.findById(id).then((user) => {
 
-      if (user) {
-        let userToCache = {
-          firstName: user.firstName,
-          lastName: user.lastName,
-          id: user._id,
-          email: user.email,
-          phone: user.phone,
-          role: user.role,
-          image: user.avatar,
-          city: user.city,
-          country: user.country,
-          zip: user.zip,
-        };
-        res.status(200).json({ message: "Found User", data: userToCache })
-      } else {
-        res.status(404).json({ message: "User Not Found" })
+        if (user) {
+          let userToCache = {
+            firstName: user.firstName,
+            lastName: user.lastName,
+            id: user._id,
+            email: user.email,
+            phone: user.phone,
+            role: user.role,
+            image: user.avatar,
+            city: user.city,
+            country: user.country,
+            zip: user.zip,
+          };
+          res.status(200).json({ message: "Found User", data: userToCache })
+        } else {
+          res.status(404).json({ message: "User Not Found" })
 
-      }
+        }
 
 
-    }).catch((e) => {
-      console.log(`\x1b[31mError in getting the user:\x1b[0m ${e}`)
+      }).catch((e) => {
+        console.log(`\x1b[31mError in getting the user:\x1b[0m ${e}`)
 
-      res.status(500).json({ message: 'Internal Server Error' })
-    })
-  } else {
-    res.sendStatus(400)
-  }
+        res.status(500).json({ message: 'Internal Server Error' })
+      })
+    } else {
+      res.sendStatus(400)
+    }
   }
 })
 
 
 
 
-router.put('/', authenticateToken,(req, res) => {
- 
+router.put('/', authenticateToken, (req, res) => {
+
   const id = req.body.id
   console.log(req.body)
   if (isValidObjectId(id)) {
@@ -307,169 +333,169 @@ router.put('/', authenticateToken,(req, res) => {
     res.sendStatus(400)
   }
 
-  
+
 
 })
 
 //delete user with their notices
-router.delete('/:id', authenticateToken,(req, res) => {
+router.delete('/:id', authenticateToken, (req, res) => {
   console.log("\x1b[35m******************* Delete User By Id Route *******************\x1b[0m");
   const authHeader = req.headers['Authorization'] || req.headers["authorization"]
   const token = authHeader && authHeader.split(' ')[1]
-  
+
   const decoded = jwt.decode(token)
   if (decoded.role && decoded.role !== "Admin") {
     res.status(403).json({ message: `Unauthorized` })
 
   } else {
-  const id = req.params.id;
-  if (!id) return res.status(400).json({ message: 'No User Id Supplied' });
+    const id = req.params.id;
+    if (!id) return res.status(400).json({ message: 'No User Id Supplied' });
 
-  if (!isValidObjectId(id)) return res.status(400).json({ message: 'Invalid User Id' });
+    if (!isValidObjectId(id)) return res.status(400).json({ message: 'Invalid User Id' });
 
-  Notice.deleteMany({ customerId: id })
-    .then((noticeResponse) => {
-      const noticeMessage = noticeResponse.deletedCount > 0
-        ? `Deleted Notices: ${noticeResponse.deletedCount}`
-        : 'No Notices';
+    Notice.deleteMany({ customerId: id })
+      .then((noticeResponse) => {
+        const noticeMessage = noticeResponse.deletedCount > 0
+          ? `Deleted Notices: ${noticeResponse.deletedCount}`
+          : 'No Notices';
 
-      Feedback.deleteMany({ commentorId: id })
-        .then((feedbackRes) => {
-          const feedbackMesage = feedbackRes.deletedCount > 0
-            ? `Deleted Feedbacks: ${feedbackRes.deletedCount}`
-            : 'No Feedbacks';
+        Feedback.deleteMany({ commentorId: id })
+          .then((feedbackRes) => {
+            const feedbackMesage = feedbackRes.deletedCount > 0
+              ? `Deleted Feedbacks: ${feedbackRes.deletedCount}`
+              : 'No Feedbacks';
 
-          User.findById(id)
-            .then((userDoc) => {
-              if (!userDoc) return res.status(404).json({ message: 'User not found' });
+            User.findById(id)
+              .then((userDoc) => {
+                if (!userDoc) return res.status(404).json({ message: 'User not found' });
 
-              const userToArchive = {
-                firstName: userDoc.firstName,
-                lastName: userDoc.lastName,
-                email: userDoc.email,
-                phone: userDoc.phone,
-                role: userDoc.role,
-                active: false,
-                previousId: String(userDoc._id),
-                creationDate: userDoc.createdAt,
-                avatar: userDoc.avatar,
-                age: userDoc.age,
-                workId: userDoc.workId,
-              };
+                const userToArchive = {
+                  firstName: userDoc.firstName,
+                  lastName: userDoc.lastName,
+                  email: userDoc.email,
+                  phone: userDoc.phone,
+                  role: userDoc.role,
+                  active: false,
+                  previousId: String(userDoc._id),
+                  creationDate: userDoc.createdAt,
+                  avatar: userDoc.avatar,
+                  age: userDoc.age,
+                  workId: userDoc.workId,
+                };
 
-              new UserArchive(userToArchive).save()
-                .then((archivedUser) => {
-                  Order.find({ customerId: userDoc._id })
-                    .then((orders) => {
-                      const orderUpdates = orders.map((order) =>
-                        Order.updateOne({ _id: order._id }, { archivedUserId: archivedUser._id })
-                      );
+                new UserArchive(userToArchive).save()
+                  .then((archivedUser) => {
+                    Order.find({ customerId: userDoc._id })
+                      .then((orders) => {
+                        const orderUpdates = orders.map((order) =>
+                          Order.updateOne({ _id: order._id }, { archivedUserId: archivedUser._id })
+                        );
 
-                      Promise.all(orderUpdates)
-                        .then(() => {
-                          Invoice.find({ customerId: userDoc._id }) 
-                            .then((invoices) => {
-                              const invoiceUpdates = invoices.map((invoice) =>
-                                Invoice.updateOne({ _id: invoice._id }, { archivedUserId: archivedUser._id })
-                              );
+                        Promise.all(orderUpdates)
+                          .then(() => {
+                            Invoice.find({ customerId: userDoc._id })
+                              .then((invoices) => {
+                                const invoiceUpdates = invoices.map((invoice) =>
+                                  Invoice.updateOne({ _id: invoice._id }, { archivedUserId: archivedUser._id })
+                                );
 
-                              return Promise.all(invoiceUpdates);
-                            })
-                            .then(() => {
-                              // Delete the user
-                              User.deleteOne({ _id: id })
-                                .then((deleteResponse) => {
-                                  if (deleteResponse.deletedCount === 1) {
-                                    res.status(200).json({
-                                      message: `User Deleted | ${noticeMessage} | ${feedbackMesage}`,
-                                    });
-                                  } else {
-                                    res.status(304).json({
-                                      message: `User Not Deleted | ${noticeMessage} | ${feedbackMesage}`,
-                                    });
-                                  }
-                                })
-                                .catch((err) => {
-                                  console.error(`\x1b[31mError deleting user:\x1b[0m ${err}`);
-                                  res.status(500).json({ message: 'Error deleting user' });
-                                });
-                            })
-                            .catch((err) => {
-                              console.error(`\x1b[31mError updating invoices:\x1b[0m ${err}`);
-                              res.status(500).json({ message: 'Error updating invoices' });
-                            });
-                        })
-                        .catch((err) => {
-                          console.error(`\x1b[31mError updating orders:\x1b[0m ${err}`);
-                          res.status(500).json({ message: 'Error updating orders' });
-                        });
-                    })
-                    .catch((err) => {
-                      console.error(`\x1b[31mError finding orders:\x1b[0m ${err}`);
-                      res.status(500).json({ message: 'Error finding orders' });
-                    });
-                })
-                .catch((err) => {
-                  console.error(`\x1b[31mError archiving user:\x1b[0m ${err}`);
-                  res.status(500).json({ message: 'Error archiving user' });
-                });
-            })
-            .catch((err) => {
-              console.error(`\x1b[31mError finding user:\x1b[0m ${err}`);
-              res.status(500).json({ message: 'Error finding user' });
-            });
-        })
-        .catch((err) => {
-          console.error(`\x1b[31mError deleting feedbacks:\x1b[0m ${err}`);
-          res.status(500).json({ message: 'Error deleting feedbacks' });
-        });
-    })
-    .catch((err) => {
-      console.error(`\x1b[31mError deleting notices:\x1b[0m ${err}`);
-      res.status(500).json({ message: 'Error deleting notices' });
-    });
+                                return Promise.all(invoiceUpdates);
+                              })
+                              .then(() => {
+                                // Delete the user
+                                User.deleteOne({ _id: id })
+                                  .then((deleteResponse) => {
+                                    if (deleteResponse.deletedCount === 1) {
+                                      res.status(200).json({
+                                        message: `User Deleted | ${noticeMessage} | ${feedbackMesage}`,
+                                      });
+                                    } else {
+                                      res.status(304).json({
+                                        message: `User Not Deleted | ${noticeMessage} | ${feedbackMesage}`,
+                                      });
+                                    }
+                                  })
+                                  .catch((err) => {
+                                    console.error(`\x1b[31mError deleting user:\x1b[0m ${err}`);
+                                    res.status(500).json({ message: 'Error deleting user' });
+                                  });
+                              })
+                              .catch((err) => {
+                                console.error(`\x1b[31mError updating invoices:\x1b[0m ${err}`);
+                                res.status(500).json({ message: 'Error updating invoices' });
+                              });
+                          })
+                          .catch((err) => {
+                            console.error(`\x1b[31mError updating orders:\x1b[0m ${err}`);
+                            res.status(500).json({ message: 'Error updating orders' });
+                          });
+                      })
+                      .catch((err) => {
+                        console.error(`\x1b[31mError finding orders:\x1b[0m ${err}`);
+                        res.status(500).json({ message: 'Error finding orders' });
+                      });
+                  })
+                  .catch((err) => {
+                    console.error(`\x1b[31mError archiving user:\x1b[0m ${err}`);
+                    res.status(500).json({ message: 'Error archiving user' });
+                  });
+              })
+              .catch((err) => {
+                console.error(`\x1b[31mError finding user:\x1b[0m ${err}`);
+                res.status(500).json({ message: 'Error finding user' });
+              });
+          })
+          .catch((err) => {
+            console.error(`\x1b[31mError deleting feedbacks:\x1b[0m ${err}`);
+            res.status(500).json({ message: 'Error deleting feedbacks' });
+          });
+      })
+      .catch((err) => {
+        console.error(`\x1b[31mError deleting notices:\x1b[0m ${err}`);
+        res.status(500).json({ message: 'Error deleting notices' });
+      });
   }
 });
 
 
-router.get('/updateStatus/:id', authenticateToken,(req, res) => {
+router.get('/updateStatus/:id', authenticateToken, (req, res) => {
   console.log("\x1b[35m*******************Validate User By Id Route\x1b[0m")
   const authHeader = req.headers['Authorization'] || req.headers["authorization"]
   const token = authHeader && authHeader.split(' ')[1]
-  
+
   const decoded = jwt.decode(token)
   if (decoded.role && decoded.role !== "Admin") {
     res.status(403).json({ message: `Unauthorized` })
 
   } else {
-  const id = req.params.id
-  if (!id) {
-    res.sendStatus(400)
-  } else {
-
-    if (isValidObjectId(id)) {
-      User.findById({ _id: id }).then((doc) => {
-        if (doc) {
-          doc.status = !doc.status
-          User.updateOne({ _id: doc._id }, doc).then((response) => {
-            response.nModified == 1 ? res.status(200).json({ message: 'User Status Is Updated' }) : res.status(304).json({ message: 'User Status not udpated' })
-
-          })
-        } else {
-          res.status(404).json({ message: 'User Not Found' })
-
-        }
-
-      }).catch((e) => {
-        console.log(`\x1b[31mError in user validation:\x1b[0m ${e}`)
-        res.status(500).json({ message: 'Internal Server Error' })
-      })
-
-    } else {
+    const id = req.params.id
+    if (!id) {
       res.sendStatus(400)
-    }
+    } else {
 
-  }
+      if (isValidObjectId(id)) {
+        User.findById({ _id: id }).then((doc) => {
+          if (doc) {
+            doc.status = !doc.status
+            User.updateOne({ _id: doc._id }, doc).then((response) => {
+              response.nModified == 1 ? res.status(200).json({ message: 'User Status Is Updated' }) : res.status(304).json({ message: 'User Status not udpated' })
+
+            })
+          } else {
+            res.status(404).json({ message: 'User Not Found' })
+
+          }
+
+        }).catch((e) => {
+          console.log(`\x1b[31mError in user validation:\x1b[0m ${e}`)
+          res.status(500).json({ message: 'Internal Server Error' })
+        })
+
+      } else {
+        res.sendStatus(400)
+      }
+
+    }
   }
 })
 

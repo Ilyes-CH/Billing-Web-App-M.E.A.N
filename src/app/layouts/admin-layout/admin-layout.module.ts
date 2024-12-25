@@ -35,7 +35,6 @@ import { NewsComponent } from '../news/news.component';
 import { HomeFeedbackComponent } from '../home-feedback/home-feedback.component';
 
 
-
 @NgModule({
   imports: [
     CommonModule,
@@ -47,7 +46,7 @@ import { HomeFeedbackComponent } from '../home-feedback/home-feedback.component'
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    MatTooltipModule,
+    MatTooltipModule,    
   ],
   declarations: [
     DashboardComponent,
